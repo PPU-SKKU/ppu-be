@@ -2,8 +2,7 @@ version: '3.9'
 
 services:
   server:
-    build: .
-    image: ppu-app:latest
+    image: yaongmeow/ppu-docker:latest
     container_name: ppu-container
     ports:
       - "8080:8080"
