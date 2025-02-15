@@ -43,4 +43,4 @@ jobs:
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
             echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-            docker-compose -f docker-compose-dev.yml up -d
+            sudo docker-compose -f docker-compose-dev.yml up -d
