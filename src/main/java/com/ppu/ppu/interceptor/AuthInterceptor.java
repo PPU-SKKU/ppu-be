@@ -10,7 +10,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
-    // TODO: 환경변수로 분리 필요
 
     public AuthInterceptor(JwtUtil jwtUtil){
         this.jwtUtil = jwtUtil;

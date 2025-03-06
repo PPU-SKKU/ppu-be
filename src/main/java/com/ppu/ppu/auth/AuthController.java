@@ -9,7 +9,6 @@ import com.ppu.ppu.user.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody UserCreateDto user, HttpServletRequest request) {
+    public ResponseEntity<Void> signup(@RequestBody UserCreateDto user) {
         Optional<User> existingUser = this.userService.getUserByEmail(user.getEmail());
         if (existingUser.isPresent()) {
             // 가입 불가
@@ -43,20 +42,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginReponseDto> login(@RequestBody UserPwLoginDto user) {
+    public ResponseEntity<UserLoginReponseDto> login(@RequestBody UserPwLoginDto user, HttpServletRequest request) {
         Optional<User> existingUser = this.userService.getUserByEmail(user.getEmail());
-        System.out.println(BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword()));
+
         if (!existingUser.isPresent() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
             return ResponseEntity.badRequest().build();
         }
 
         String accessToken = jwtUtil.generateToken(existingUser.get().getId());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        return ResponseEntity.ok().headers(headers).build();
-        // 방식 결정 필요
-        // String id = request.getAttribute("id").toString();
-        // return ResponseEntity.status(200).body(new UserLoginReponseDto(id));
+        return ResponseEntity.status(200).body(new UserLoginReponseDto(accessToken));
     }
 }
