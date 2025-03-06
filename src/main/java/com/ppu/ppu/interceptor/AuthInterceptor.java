@@ -6,12 +6,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Optional;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
-    private final JwtUtil jwtUtil = new JwtUtil("hello", Long.valueOf(3600000));
+    private final JwtUtil jwtUtil;
     // TODO: 환경변수로 분리 필요
+
+    public AuthInterceptor(JwtUtil jwtUtil){
+        this.jwtUtil = jwtUtil;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorization = request.getHeader("Authorization");

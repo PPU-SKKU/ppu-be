@@ -3,16 +3,18 @@ package com.ppu.ppu.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class JwtUtil {
     private final String secret;
     private final Long exp;
 
-    public JwtUtil(String secret, Long exp) {
-        this.secret = secret;
-        this.exp = exp;
+    public JwtUtil() {
+        this.secret = "mysecretkeymysecretkeymysecretkeymysecretkeymysecretkeymysecretkey";
+        this.exp = Long.valueOf(3600000);
     }
 
     public String generateToken(String id) {
