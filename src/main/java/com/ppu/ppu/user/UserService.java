@@ -18,6 +18,9 @@ public class UserService {
     public Optional<User> getUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
+    public Optional<User> getUserByNickname(String nickname){
+        return userRepository.findByNickname(nickname);
+    }
 
     @Transactional
     public void createUser(UserCreateDto user){
@@ -29,5 +32,15 @@ public class UserService {
         newUser.setBirth(user.getBirth());
         newUser.printEntity();
         userRepository.save(newUser);
+    }
+
+    @Transactional
+    public void updateUserNickname(String id, String nickname){
+        userRepository.updateNicknameById(id, nickname);
+    }
+
+    @Transactional
+    public void updateUserProfileImage(String id, String filePath){
+        userRepository.updateProfileImageById(id, filePath);
     }
 }
