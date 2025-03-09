@@ -2,11 +2,17 @@ version: '3.9'
 
 services:
   server:
-    build: .
-    image: ppu-app:latest
+    build:
+      context: .
+      dockerfile: local.Dockerfile
+    image: ppu-app-local:latest
+    volumes:
+      - ./src:/app/src
+      - ./static:/app/static
     container_name: ppu-container
     ports:
       - "8080:8080"
+    command: ./gradlew bootRun
     restart: always
     env_file:
       - ./.env

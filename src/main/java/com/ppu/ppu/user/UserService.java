@@ -38,4 +38,9 @@ public class UserService {
     public void updateUserNickname(String id, String nickname){
         userRepository.updateNicknameById(id, nickname);
     }
+
+    @Transactional
+    public void updateUserProfileImage(String id, String filePath){
+        userRepository.updateProfileImageById(id, filePath);
+    }
 }
