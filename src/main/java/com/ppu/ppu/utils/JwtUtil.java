@@ -13,8 +13,8 @@ public class JwtUtil {
     private final Long exp;
 
     public JwtUtil() {
-        this.secret = "mysecretkeymysecretkeymysecretkeymysecretkeymysecretkeymysecretkey";
-        this.exp = Long.valueOf(3600000);
+        this.secret = System.getenv("TOKEN_SECRET");
+        this.exp = Long.valueOf(System.getenv("DEV_TOKEN_EXP"));
     }
 
     public String generateToken(String id) {
