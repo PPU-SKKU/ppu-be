@@ -31,6 +31,14 @@ public class UserController {
     @PatchMapping("/profile-img")
     public ResponseEntity<Void> updateProfileImage(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         String id = request.getAttribute("id").toString();
+        Optional<User> user = userService.findUserById(id);
+        if(!user.isPresent()) {return ResponseEntity.badRequest().build();}
+        String profileImage = user.get().getProfileImage();
+
+        if(profileImage != null) {
+            fileUtil.deleteFile(profileImage);
+        }
+
         try {
             Optional<String> filename = fileUtil.storeFile(file);
             if (!filename.isPresent()) {

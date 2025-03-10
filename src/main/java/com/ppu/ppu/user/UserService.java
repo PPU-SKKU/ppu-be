@@ -43,4 +43,8 @@ public class UserService {
     public void updateUserProfileImage(String id, String filePath){
         userRepository.updateProfileImageById(id, filePath);
     }
+
+    public Optional<User> findUserById(String id){
+        return userRepository.findById(id);
+    }
 }
