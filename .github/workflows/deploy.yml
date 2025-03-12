@@ -43,5 +43,7 @@ jobs:
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
             echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            echo "TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}" >> .env
+            echo "DEV_TOKEN_EXP=${{ secrets.DEV_TOKEN_EXP }}" >> .env
             echo "STATIC_FILE_PATH=${{ secrets.STATIC_FILE_PATH }}" >> .env
             sudo docker-compose -f docker-compose-dev.yml up -d

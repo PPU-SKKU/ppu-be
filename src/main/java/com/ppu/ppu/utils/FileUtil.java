@@ -33,4 +33,11 @@ public class FileUtil {
         file.transferTo(new File(filePath + storeFileName));
         return Optional.of("/static/" + storeFileName);
     }
+
+    public void deleteFile(String fileName) {
+        File file = new File("/app" + fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }
