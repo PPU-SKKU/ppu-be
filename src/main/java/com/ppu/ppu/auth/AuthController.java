@@ -49,7 +49,7 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
 
-        String accessToken = jwtUtil.generateToken(existingUser.get().getId());
+        String accessToken = jwtUtil.generateToken(existingUser.get().getId().toString());
         return ResponseEntity.status(200).body(new UserLoginReponseDto(accessToken));
     }
 }

@@ -3,52 +3,62 @@ package com.ppu.ppu.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 @Table(name="users")
+@ToString
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", unique = true, nullable = false)
-    private String id;
+    @Column(name = "id")
+    private UUID id;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
     @Column(name = "name", length = 50)
     private String name;
     
-    @Column(name = "nickname", length = 10)
+    @Column(name = "nickname", length = 16)
     private String nickname;
 
-    @Column(name = "profile_image")
+    @Column(name = "profile_image", length = 255)
     private String profileImage;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 255)
     private String email;
 
     @Column(name = "birth")
     private LocalDate birth;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "login_type")
+//    private LoginType loginType;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public void printEntity(){
-        System.out.println("email: " + this.email);
-        System.out.println("id: " + this.id);
-        System.out.println("password: " + this.password);
-        System.out.println("name: " + this.name);
-        System.out.println("nickname: " + this.nickname);
-        System.out.println("profileImage: " + this.profileImage);
-        System.out.println("createdAt: " + this.createdAt);
-    }
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    // gender, type
+    @PrePersist
+    public void generateUUID() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
+    }
 }

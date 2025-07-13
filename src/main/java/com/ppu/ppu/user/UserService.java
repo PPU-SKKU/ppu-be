@@ -30,18 +30,9 @@ public class UserService {
         newUser.setName(user.getName());
         newUser.setNickname(user.getNickname());
         newUser.setBirth(user.getBirth());
-        newUser.printEntity();
+        newUser.setGender(user.getGender());
+        System.out.println("newUser = " + newUser.toString());
         userRepository.save(newUser);
-    }
-
-    @Transactional
-    public void updateUserNickname(String id, String nickname){
-        userRepository.updateNicknameById(id, nickname);
-    }
-
-    @Transactional
-    public void updateUserProfileImage(String id, String filePath){
-        userRepository.updateProfileImageById(id, filePath);
     }
 
     public Optional<User> findUserById(String id){
