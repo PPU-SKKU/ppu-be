@@ -1,6 +1,5 @@
-package com.ppu.ppu.user.dto;
+package com.ppu.ppu.auth.dto;
 
-import com.ppu.ppu.user.LoginType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.ppu.ppu.user;
+package com.ppu.ppu.user.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

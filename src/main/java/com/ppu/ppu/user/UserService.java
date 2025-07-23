@@ -1,7 +1,10 @@
 package com.ppu.ppu.user;
 
 
-import com.ppu.ppu.user.dto.UserCreateDto;
+import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.user.domain.User;
+import com.ppu.ppu.auth.dto.UserCreateDto;
+import com.ppu.ppu.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

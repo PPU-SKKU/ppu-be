@@ -1,10 +1,8 @@
-package com.ppu.ppu.user.dto;
+package com.ppu.ppu.auth.dto;
 
-import com.ppu.ppu.user.Gender;
-import com.ppu.ppu.user.LoginType;
+import com.ppu.ppu.user.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

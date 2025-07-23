@@ -2,10 +2,10 @@ package com.ppu.ppu.auth.service;
 
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
-import com.ppu.ppu.user.Gender;
-import com.ppu.ppu.user.LoginType;
-import com.ppu.ppu.user.dto.UserCreateDto;
-import com.ppu.ppu.user.dto.UserLoginReponseDto;
+import com.ppu.ppu.user.domain.Gender;
+import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.auth.dto.UserCreateDto;
+import com.ppu.ppu.auth.dto.UserLoginReponseDto;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class OAuthService {
     public UserLoginReponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
         // extract code
         String code = dto.getCode();
-        System.out.println("Kakao User Code: " + code);
+//        System.out.println("Kakao User Code: " + code);
 
         // receive kakao access token
         KakaoDTO.OAuthToken token;
@@ -32,7 +32,7 @@ public class OAuthService {
             throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
         }
         String kakaoAccessToken = token.getAccess_token();
-        System.out.println("Kakao User Token: " + kakaoAccessToken);
+//        System.out.println("Kakao User Token: " + kakaoAccessToken);
 
         // Kakao에서 정보 추출
         // 이미 유저가 존재하는 경우 email과 LoginType만 사용

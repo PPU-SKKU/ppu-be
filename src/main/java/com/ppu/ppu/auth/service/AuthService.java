@@ -2,14 +2,15 @@ package com.ppu.ppu.auth.service;
 
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
-import com.ppu.ppu.user.LoginType;
-import com.ppu.ppu.user.User;
+import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.user.UserService;
-import com.ppu.ppu.user.dto.UserCreateDto;
-import com.ppu.ppu.user.dto.UserLoginReponseDto;
-import com.ppu.ppu.user.dto.UserPwLoginDto;
+import com.ppu.ppu.auth.dto.UserCreateDto;
+import com.ppu.ppu.auth.dto.UserLoginReponseDto;
+import com.ppu.ppu.auth.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.JwtUtil;
 import com.ppu.ppu.utils.KakaoUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -61,4 +62,29 @@ public class AuthService {
         return new UserLoginReponseDto(accessToken);
     }
 
+    /*public void withdraw(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        if(token == null || !token.startsWith("Bearer ")) {
+            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        token = token.substring(7);
+        if(!jwtUtil.validateToken(token)) {
+            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        System.out.println("withdraw token: " + token);
+        String Id = jwtUtil.parseToken(token);
+
+        System.out.println("withdraw Id: " + Id);
+
+        Optional<User> user = userService.findUserById(Id);
+        if(!user.isPresent()) {
+            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        // Login Type에 따라서 먼저 OAuth의 계정을 삭제
+
+    }*/
 }

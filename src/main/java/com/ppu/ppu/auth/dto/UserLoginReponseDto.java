@@ -1,4 +1,4 @@
-package com.ppu.ppu.user.dto;
+package com.ppu.ppu.auth.dto;
 
 public class UserLoginReponseDto {
     private String accessToken;

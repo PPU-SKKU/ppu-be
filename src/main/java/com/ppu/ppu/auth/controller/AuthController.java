@@ -3,25 +3,19 @@ package com.ppu.ppu.auth.controller;
 
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
-import com.ppu.ppu.user.LoginType;
-import com.ppu.ppu.user.User;
-import com.ppu.ppu.user.UserService;
-import com.ppu.ppu.user.dto.UserCreateDto;
-import com.ppu.ppu.user.dto.UserLoginReponseDto;
-import com.ppu.ppu.user.dto.UserPwLoginDto;
-import com.ppu.ppu.utils.JwtUtil;
+import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.auth.dto.UserCreateDto;
+import com.ppu.ppu.auth.dto.UserLoginReponseDto;
+import com.ppu.ppu.auth.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginReponseDto> login(@Valid @RequestBody UserPwLoginDto user, HttpServletRequest request) {
+    public ResponseEntity<UserLoginReponseDto> login(@Valid @RequestBody UserPwLoginDto user) {
         return ResponseEntity.ok().body(authService.loginPw(user));
     }
 
@@ -50,9 +44,13 @@ public class AuthController {
     }
 
     @GetMapping("/login/kakao/callback")
-    public ResponseEntity<UserLoginReponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto, HttpServletRequest request) {
+    public ResponseEntity<UserLoginReponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
         return ResponseEntity.ok().body(oAuthService.kakaoLogin(dto));
     }
 
-
+    /*@DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(HttpServletRequest request) {
+        authService.withdraw(request);
+        return ResponseEntity.ok().build();
+    }*/
 }
