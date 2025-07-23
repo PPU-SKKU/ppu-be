@@ -23,7 +23,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(UserCreateDto user){
+    public void createUser(UserCreateDto user, LoginType loginType) {
         User newUser = new User();
         newUser.setEmail(user.getEmail());
         newUser.setPassword(user.getPassword());
@@ -31,7 +31,7 @@ public class UserService {
         newUser.setNickname(user.getNickname());
         newUser.setBirth(user.getBirth());
         newUser.setGender(user.getGender());
-        newUser.setLoginType(user.getLoginType());
+        newUser.setLoginType(loginType);
         System.out.println("newUser = " + newUser.toString());
         userRepository.save(newUser);
     }

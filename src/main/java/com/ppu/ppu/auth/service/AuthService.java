@@ -12,7 +12,6 @@ import com.ppu.ppu.utils.JwtUtil;
 import com.ppu.ppu.utils.KakaoUtil;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,14 +23,14 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final KakaoUtil kakaoUtil;
 
-    public void signup(UserCreateDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
+    public void signup(UserCreateDto user, LoginType loginType) {
+        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
         if (existingUser.isPresent()) {
             throw new AuthException(ErrorCode.AUTH_SIGNUP_FAILED);
         }
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
-        userService.createUser(user);
+        userService.createUser(user, loginType);
     }
 
     public UserLoginReponseDto loginPw(UserPwLoginDto user) {
@@ -48,19 +47,13 @@ public class AuthService {
         return new UserLoginReponseDto(accessToken);
     }
 
-    public UserLoginReponseDto loginOauth(UserCreateDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
-
-        // db has dupliace email but different login type
-        /*if(existingUser.isPresent()
-                && existingUser.get().getLoginType() != user.getLoginType()) {
-            throw new AuthException(ErrorCode.AUTH_SIGNUP_FAILED);
-        }*/
+    public UserLoginReponseDto loginOauth(UserCreateDto user, LoginType loginType) {
+        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
 
         // signup proceed
         if(!existingUser.isPresent()) {
-            signup(user);
-            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
+            signup(user, loginType);
+            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
         }
 
         // login proceed

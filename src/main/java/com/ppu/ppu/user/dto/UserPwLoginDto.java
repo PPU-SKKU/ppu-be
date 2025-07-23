@@ -1,11 +1,13 @@
 package com.ppu.ppu.user.dto;
 
+import com.ppu.ppu.user.LoginType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class UserPwLoginDto {
-
     @Email
     @NotBlank
     @NotNull
@@ -14,25 +16,4 @@ public class UserPwLoginDto {
     @NotBlank
     @NotNull
     private String password;
-
-    public UserPwLoginDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

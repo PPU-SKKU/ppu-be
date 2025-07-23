@@ -91,9 +91,6 @@ public class OAuthService {
             user.setBirth(birthday);
         } catch (Exception ignore) {}
 
-        // 6. LoginType
-        user.setLoginType(LoginType.KAKAO);
-
-        return authService.loginOauth(user);
+        return authService.loginOauth(user, LoginType.KAKAO);
     }
 }

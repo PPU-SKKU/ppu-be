@@ -3,6 +3,7 @@ package com.ppu.ppu.auth.controller;
 
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
+import com.ppu.ppu.user.LoginType;
 import com.ppu.ppu.user.User;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.user.dto.UserCreateDto;
@@ -32,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody UserCreateDto user) {
-        authService.signup(user);
+        authService.signup(user, LoginType.PASSWORD);
         return ResponseEntity.ok().build();
     }
 

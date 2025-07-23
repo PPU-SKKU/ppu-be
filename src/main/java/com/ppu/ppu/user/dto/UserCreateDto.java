@@ -37,7 +37,4 @@ public class UserCreateDto {
     private LocalDate birth;
 
     private Gender gender;
-
-    @NotNull
-    private LoginType loginType;
 }
