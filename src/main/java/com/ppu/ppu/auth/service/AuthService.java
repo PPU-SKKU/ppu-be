@@ -22,7 +22,6 @@ import java.util.Optional;
 public class AuthService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final KakaoUtil kakaoUtil;
 
     public void signup(UserCreateDto user, LoginType loginType) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
@@ -36,9 +35,6 @@ public class AuthService {
 
     public UserLoginReponseDto loginPw(UserPwLoginDto user) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), LoginType.PASSWORD);
-
-        System.out.println("existing user: " + existingUser.isPresent());
-        System.out.println("existing user: " + existingUser.get().getLoginType());
 
         if (!existingUser.isPresent() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
             throw new AuthException(ErrorCode.AUTH_LOGIN_FAILED);
