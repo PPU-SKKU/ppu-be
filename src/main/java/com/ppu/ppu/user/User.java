@@ -1,6 +1,7 @@
 package com.ppu.ppu.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +22,7 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "password", length = 255)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
     @Column(name = "name", length = 50)
@@ -33,6 +34,7 @@ public class User {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
+    @Email
     @Column(name = "email", length = 255, nullable = false)
     private String email;
 

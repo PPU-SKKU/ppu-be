@@ -1,7 +1,18 @@
 package com.ppu.ppu.user.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class UserPwLoginDto {
+
+    @Email
+    @NotBlank
+    @NotNull
     private String email;
+
+    @NotBlank
+    @NotNull
     private String password;
 
     public UserPwLoginDto(String email, String password) {

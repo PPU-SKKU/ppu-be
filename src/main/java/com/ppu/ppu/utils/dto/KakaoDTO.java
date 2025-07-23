@@ -1,4 +1,4 @@
-package com.ppu.ppu.auth.dto;
+package com.ppu.ppu.utils.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -6,16 +6,25 @@ import lombok.Getter;
 
 @Data
 public class KakaoDTO {
-    @Getter
-    public static class OAuthToken {
-        private String token_type;
-        private String access_token;
-        private String refresh_token;
-        private Integer expires_in;
-        private Integer refresh_token_expires_in;
+    @Data
+    public static class AuthorizeCode {
+        private String code;
+//        private String error;
+//        private String error_description;
+//        private String state;
     }
 
-    @Getter
+
+    @Data
+    public static class OAuthToken {
+//        private String token_type;
+        private String access_token;
+//        private String refresh_token;
+//        private Integer expires_in;
+//        private Integer refresh_token_expires_in;
+    }
+
+    @Data
     public static class UserProfile {
         private Long id;
 
@@ -23,7 +32,6 @@ public class KakaoDTO {
         private KakaoAccount kakaoAccount;
 
         @Data
-        @Getter
         public static class KakaoAccount {
             private String name;
             private String email;
@@ -37,10 +45,9 @@ public class KakaoDTO {
             private Profile profile;
 
             @Data
-            @Getter
             public static class Profile {
                 private String nickname;
-                private String profile_image_url;
+//                private String profile_image_url;
             }
         }
     }
