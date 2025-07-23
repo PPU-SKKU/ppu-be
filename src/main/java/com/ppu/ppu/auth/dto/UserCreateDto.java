@@ -1,6 +1,6 @@
 package com.ppu.ppu.auth.dto;
 
-import com.ppu.ppu.user.domain.Gender;
+import com.ppu.ppu.user.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

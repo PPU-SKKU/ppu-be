@@ -2,8 +2,8 @@ package com.ppu.ppu.auth.service;
 
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
-import com.ppu.ppu.user.domain.Gender;
-import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.user.Gender;
+import com.ppu.ppu.user.LoginType;
 import com.ppu.ppu.auth.dto.UserCreateDto;
 import com.ppu.ppu.auth.dto.UserLoginReponseDto;
 import com.ppu.ppu.utils.KakaoUtil;

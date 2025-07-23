@@ -2,15 +2,13 @@ package com.ppu.ppu.auth.service;
 
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
-import com.ppu.ppu.user.domain.LoginType;
-import com.ppu.ppu.user.domain.User;
+import com.ppu.ppu.user.LoginType;
+import com.ppu.ppu.user.User;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.auth.dto.UserCreateDto;
 import com.ppu.ppu.auth.dto.UserLoginReponseDto;
 import com.ppu.ppu.auth.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.JwtUtil;
-import com.ppu.ppu.utils.KakaoUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
