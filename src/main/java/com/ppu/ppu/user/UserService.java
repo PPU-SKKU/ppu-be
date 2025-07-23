@@ -31,6 +31,7 @@ public class UserService {
         newUser.setNickname(user.getNickname());
         newUser.setBirth(user.getBirth());
         newUser.setGender(user.getGender());
+        newUser.setLoginType(user.getLoginType());
         System.out.println("newUser = " + newUser.toString());
         userRepository.save(newUser);
     }
