@@ -5,7 +5,7 @@ import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.domain.Gender;
 import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.auth.dto.UserLoginReponseDto;
+import com.ppu.ppu.auth.dto.UserLoginResponseDto;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class OAuthService {
     private final KakaoUtil kakaoUtil;
     private final AuthService authService;
 
-    public UserLoginReponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
+    public UserLoginResponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
         // extract code
         String code = dto.getCode();
 //        System.out.println("Kakao User Code: " + code);

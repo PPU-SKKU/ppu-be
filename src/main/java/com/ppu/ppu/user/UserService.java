@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -39,7 +40,7 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public Optional<User> findUserById(String id){
+    public Optional<User> findUserById(UUID id){
         return userRepository.findById(id);
     }
 }

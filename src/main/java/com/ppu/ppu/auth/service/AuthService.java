@@ -1,27 +1,25 @@
 package com.ppu.ppu.auth.service;
 
+import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.user.UserService;
-import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.auth.dto.UserLoginReponseDto;
-import com.ppu.ppu.auth.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.JwtUtil;
-import com.ppu.ppu.utils.KakaoUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final TokenIssueService tokenIssueService;
 
     public void signup(UserCreateDto user, LoginType loginType) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
@@ -33,29 +31,41 @@ public class AuthService {
         userService.createUser(user, loginType);
     }
 
-    public UserLoginReponseDto loginPw(UserPwLoginDto user) {
+    public UserLoginResponseDto loginPw(UserPwLoginDto user) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), LoginType.PASSWORD);
 
-        if (!existingUser.isPresent() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
+        if (existingUser.isEmpty() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
             throw new AuthException(ErrorCode.AUTH_LOGIN_FAILED);
         }
 
-        String accessToken = jwtUtil.generateToken(existingUser.get().getId().toString());
-        return new UserLoginReponseDto(accessToken);
+        return tokenIssueService.issueAllToken(existingUser.get().getId());
     }
 
-    public UserLoginReponseDto loginOauth(UserCreateDto user, LoginType loginType) {
+    public UserLoginResponseDto loginOauth(UserCreateDto user, LoginType loginType) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
 
         // signup proceed
-        if(!existingUser.isPresent()) {
+        if(existingUser.isEmpty()) {
             signup(user, loginType);
             existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
         }
 
         // login proceed
-        String accessToken = jwtUtil.generateToken(existingUser.get().getId().toString());
-        return new UserLoginReponseDto(accessToken);
+        return tokenIssueService.issueAllToken(existingUser.get().getId());
+    }
+
+    public UserRefreshResponseDto refresh(UserRefreshDto dto) {
+        String refreshToken = dto.getRefreshToken();
+        if(!jwtUtil.validateToken(refreshToken)) {
+            throw new AuthException(ErrorCode.AUTH_EXPIRED_TOKEN);
+        }
+
+        UUID id = UUID.fromString(jwtUtil.parseToken(refreshToken));
+        if(userService.findUserById(id).isEmpty()) {
+            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        return tokenIssueService.issueAccessToken(id);
     }
 
     /*public void withdraw(HttpServletRequest request) {

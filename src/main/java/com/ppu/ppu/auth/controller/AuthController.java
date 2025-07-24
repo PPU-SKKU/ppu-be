@@ -1,15 +1,12 @@
 package com.ppu.ppu.auth.controller;
 
 
+import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
 import com.ppu.ppu.user.domain.LoginType;
-import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.auth.dto.UserLoginReponseDto;
-import com.ppu.ppu.auth.dto.UserPwLoginDto;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginReponseDto> login(@Valid @RequestBody UserPwLoginDto user) {
+    public ResponseEntity<UserLoginResponseDto> login(@Valid @RequestBody UserPwLoginDto user) {
         return ResponseEntity.ok().body(authService.loginPw(user));
     }
 
@@ -44,8 +41,13 @@ public class AuthController {
     }
 
     @GetMapping("/login/kakao/callback")
-    public ResponseEntity<UserLoginReponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
+    public ResponseEntity<UserLoginResponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
         return ResponseEntity.ok().body(oAuthService.kakaoLogin(dto));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<UserRefreshResponseDto> refresh(@Valid @RequestBody UserRefreshDto dto) {
+        return ResponseEntity.ok().body(authService.refresh(dto));
     }
 
     /*@DeleteMapping("/withdraw")
