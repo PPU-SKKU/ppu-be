@@ -7,16 +7,11 @@ import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.utils.JwtUtil;
-import com.ppu.ppu.utils.KakaoUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.ppu.ppu.utils.kakao.KakaoUtil;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,37 +22,38 @@ public class AuthService {
     private final TokenIssueService tokenIssueService;
     private final KakaoUtil kakaoUtil;
 
-    public void signup(UserCreateDto user, LoginType loginType) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
-        if (existingUser.isPresent()) {
+    public void signup(UserCreateDto dto) {
+        if(userService.existsUserByEmailAndLoginType(dto.getEmail(), LoginType.PASSWORD)) {
             throw new AuthException(ErrorCode.AUTH_SIGNUP_FAILED);
         }
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        userService.createUser(user, loginType);
+
+        String hashedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
+        dto.setPassword(hashedPassword);
+        userService.createUser(dto, LoginType.PASSWORD);
     }
 
-    public UserLoginResponseDto loginPw(UserPwLoginDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), LoginType.PASSWORD);
+    public UserLoginResponseDto loginPw(UserPwLoginDto dto) {
+        User user = userService.getUserByEmailAndLoginType(dto.getEmail(), LoginType.PASSWORD)
+                .orElseThrow(() -> new AuthException(ErrorCode.AUTH_LOGIN_FAILED));
 
-        if (existingUser.isEmpty() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
-            throw new AuthException(ErrorCode.AUTH_LOGIN_FAILED);
-        }
-
-        return tokenIssueService.issueAllToken(existingUser.get().getId());
+        return tokenIssueService.issueAllToken(user.getId());
     }
 
-    public UserLoginResponseDto loginOauth(UserOauthDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
+    public UserLoginResponseDto loginOauth(UserOauthDto dto) {
+        User user = userService.getUserByEmailAndLoginType(dto.getEmail(), dto.getLoginType())
+                .orElseGet(() -> userService.createUser(mapFromUserOauthToUserCreateDto(dto), dto.getLoginType()));
 
-        // signup proceed
-        if(existingUser.isEmpty()) {
-            signup(new UserCreateDto(user), user.getLoginType());
-            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
-        }
+        return tokenIssueService.issueAllToken(user.getId());
+    }
 
-        // login proceed
-        return tokenIssueService.issueAllToken(existingUser.get().getId());
+    private UserCreateDto mapFromUserOauthToUserCreateDto(UserOauthDto dto) {
+        return UserCreateDto.builder()
+                .email(dto.getEmail())
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .birth(dto.getBirth())
+                .gender(dto.getGender())
+                .build();
     }
 
     public UserRefreshResponseDto refresh(UserRefreshDto dto) {
@@ -72,42 +68,5 @@ public class AuthService {
         }
 
         return tokenIssueService.issueAccessToken(id);
-    }
-
-    public ResponseEntity<Void> withdrawPreHandler(HttpServletRequest request) {
-        UUID userId = UUID.fromString((String) request.getAttribute("id"));
-
-        System.out.println("withdraw Id: " + userId);
-
-        Optional<User> user = userService.findUserById(userId);
-        if(!user.isPresent()) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        return switch (user.get().getLoginType()) {
-            case PASSWORD -> {
-                deleteUserData(userId);
-                yield ResponseEntity.ok().build();
-            }
-            case KAKAO -> ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create(kakaoUtil.getAuthorizeCodeUrl()))
-                    .build();
-            default -> throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        };
-    }
-
-    public UUID withdrawOauthUserId(UserOauthDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
-
-        if(existingUser.isEmpty()) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        UUID userId = existingUser.get().getId();
-        return userId;
-    }
-
-    public void deleteUserData(UUID userId) {
-
     }
 }

@@ -3,10 +3,7 @@ package com.ppu.ppu.auth.dto;
 import com.ppu.ppu.user.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import jakarta.validation.constraints.Email;
 
 import java.time.LocalDate;
@@ -15,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserCreateDto {
     @NotBlank
     @Email
@@ -35,12 +33,4 @@ public class UserCreateDto {
     private LocalDate birth;
 
     private Gender gender;
-
-    public UserCreateDto(UserOauthDto userOauthDto) {
-        this.email = userOauthDto.getEmail();
-        this.name = userOauthDto.getName();
-        this.nickname = userOauthDto.getNickname();
-        this.birth = userOauthDto.getBirth();
-        this.gender = userOauthDto.getGender();
-    }
 }
