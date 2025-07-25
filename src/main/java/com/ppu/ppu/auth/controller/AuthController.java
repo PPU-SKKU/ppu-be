@@ -5,7 +5,6 @@ import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
 import com.ppu.ppu.auth.service.WithdrawService;
-import com.ppu.ppu.utils.kakao.KakaoUtil;
 import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -20,7 +19,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final KakaoUtil kakaoUtil;
     private final OAuthService oAuthService;
     private final WithdrawService withdrawService;
 

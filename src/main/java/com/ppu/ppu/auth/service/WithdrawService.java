@@ -5,7 +5,6 @@ import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.user.domain.User;
-import com.ppu.ppu.utils.kakao.KakaoUtil;
 import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +20,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WithdrawService {
     private final UserService userService;
-    private final KakaoUtil kakaoUtil;
     private final OAuthService oAuthService;
 
     public ResponseEntity<Void> withdrawPreHandler(HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
 
-        Optional<User> user = userService.findUserById(userId);
-        if(!user.isPresent()) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
+        User user = userService.findUserById(userId)
+                .orElseThrow(() -> new AuthException(ErrorCode.AUTH_INVALID_TOKEN));
 
-        return switch (user.get().getLoginType()) {
+        return switch (user.getLoginType()) {
             case PASSWORD -> {
                 userService.deleteUser(userId);
                 yield ResponseEntity.ok().build();
