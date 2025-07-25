@@ -31,7 +31,7 @@ public class WithdrawService {
         return switch (user.getLoginType()) {
             case PASSWORD -> {
                 userService.deleteUser(userId);
-                yield ResponseEntity.ok().build();
+                yield ResponseEntity.noContent().build();
             }
             case KAKAO -> ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create(oAuthService.getKakaoWithdrawAuthorizeUrl()))
