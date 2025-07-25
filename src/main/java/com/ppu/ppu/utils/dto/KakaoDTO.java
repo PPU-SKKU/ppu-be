@@ -1,6 +1,7 @@
 package com.ppu.ppu.utils.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,7 @@ public class KakaoDTO {
     }
 
 
+    @AllArgsConstructor
     @Data
     public static class OAuthToken {
 //        private String token_type;
@@ -49,5 +51,10 @@ public class KakaoDTO {
 //                private String profile_image_url;
             }
         }
+    }
+
+    @Data
+    public static class UserUnlink {
+        private Long id;
     }
 }

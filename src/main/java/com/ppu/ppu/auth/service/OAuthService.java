@@ -1,17 +1,21 @@
 package com.ppu.ppu.auth.service;
 
+import com.ppu.ppu.auth.dto.UserOauthDto;
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.domain.Gender;
 import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.auth.dto.UserCreateDto;
 import com.ppu.ppu.auth.dto.UserLoginResponseDto;
+import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
+import com.ppu.ppu.utils.dto.KakaoOauthInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +23,9 @@ public class OAuthService {
     private final KakaoUtil kakaoUtil;
     private final AuthService authService;
 
-    public UserLoginResponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
+    private KakaoOauthInfo getKakaoOauthInfo(KakaoDTO.AuthorizeCode dto) {
         // extract code
         String code = dto.getCode();
-//        System.out.println("Kakao User Code: " + code);
 
         // receive kakao access token
         KakaoDTO.OAuthToken token;
@@ -32,21 +35,23 @@ public class OAuthService {
             throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
         }
         String kakaoAccessToken = token.getAccess_token();
-//        System.out.println("Kakao User Token: " + kakaoAccessToken);
 
         // Kakao에서 정보 추출
         // 이미 유저가 존재하는 경우 email과 LoginType만 사용
         // 새로 유저를 signup하는 경우는 모든 정보 사용
         KakaoDTO.UserProfile profile;
         try {
-             profile = kakaoUtil.requestUserProfile(kakaoAccessToken);
+            profile = kakaoUtil.requestUserProfile(kakaoAccessToken);
         } catch (Exception e) {
             throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
         }
 
+        return new KakaoOauthInfo(kakaoAccessToken, profile);
+    }
 
-        UserCreateDto user = new UserCreateDto();
-
+    public UserOauthDto getUserOauthDto(KakaoDTO.AuthorizeCode dto) {
+        KakaoDTO.UserProfile profile = getKakaoOauthInfo(dto).profile();
+        UserOauthDto user = new UserOauthDto();
         // 1. email
         try {
             String email = profile.getKakaoAccount().getEmail();
@@ -91,6 +96,17 @@ public class OAuthService {
             user.setBirth(birthday);
         } catch (Exception ignore) {}
 
-        return authService.loginOauth(user, LoginType.KAKAO);
+        // 6. LoginType
+        user.setLoginType(LoginType.KAKAO);
+        return user;
+    }
+
+    public void unlinkKakaoUser(KakaoDTO.AuthorizeCode dto) {
+        String kakaoAccessToken = getKakaoOauthInfo(dto).accessToken();
+        try {
+            kakaoUtil.requestUserUnlink(kakaoAccessToken);
+        } catch (Exception e) {
+            throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
+        }
     }
 }

@@ -57,5 +57,12 @@ public class KakaoUtil {
                 .block();
     }
 
-
+    public KakaoDTO.UserUnlink requestUserUnlink(String kakaoAccessToken) {
+        return kakaoApiClient.post()
+                .uri("/v1/user/unlink")
+                .header("Authorization", "Bearer " + kakaoAccessToken)
+                .retrieve()
+                .bodyToMono(KakaoDTO.UserUnlink.class)
+                .block();
+    }
 }

@@ -1,13 +1,14 @@
 package com.ppu.ppu.auth.dto;
 
 import com.ppu.ppu.user.domain.Gender;
+import com.ppu.ppu.user.domain.LoginType;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.validation.constraints.Email;
 
 import java.time.LocalDate;
 
@@ -15,32 +16,20 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDto {
+public class UserOauthDto {
     @NotBlank
     @Email
     @NotNull
     private String email;
 
-    @NotBlank
-    @NotNull
-//    @Size(min = 8, max = 64, message = "too short or long password")
-    private String password;
-
     private String name;
 
-    @NotBlank
-    @NotNull
     private String nickname;
 
     private LocalDate birth;
 
     private Gender gender;
 
-    public UserCreateDto(UserOauthDto userOauthDto) {
-        this.email = userOauthDto.getEmail();
-        this.name = userOauthDto.getName();
-        this.nickname = userOauthDto.getNickname();
-        this.birth = userOauthDto.getBirth();
-        this.gender = userOauthDto.getGender();
-    }
+    @NotNull
+    private LoginType loginType;
 }

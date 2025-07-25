@@ -7,10 +7,15 @@ import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.utils.JwtUtil;
+import com.ppu.ppu.utils.KakaoUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +25,7 @@ public class AuthService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final TokenIssueService tokenIssueService;
+    private final KakaoUtil kakaoUtil;
 
     public void signup(UserCreateDto user, LoginType loginType) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
@@ -41,13 +47,13 @@ public class AuthService {
         return tokenIssueService.issueAllToken(existingUser.get().getId());
     }
 
-    public UserLoginResponseDto loginOauth(UserCreateDto user, LoginType loginType) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
+    public UserLoginResponseDto loginOauth(UserOauthDto user) {
+        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
 
         // signup proceed
         if(existingUser.isEmpty()) {
-            signup(user, loginType);
-            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
+            signup(new UserCreateDto(user), user.getLoginType());
+            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
         }
 
         // login proceed
@@ -68,29 +74,40 @@ public class AuthService {
         return tokenIssueService.issueAccessToken(id);
     }
 
-    /*public void withdraw(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+    public ResponseEntity<Void> withdrawPreHandler(HttpServletRequest request) {
+        UUID userId = UUID.fromString((String) request.getAttribute("id"));
 
-        if(token == null || !token.startsWith("Bearer ")) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
+        System.out.println("withdraw Id: " + userId);
 
-        token = token.substring(7);
-        if(!jwtUtil.validateToken(token)) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        System.out.println("withdraw token: " + token);
-        String Id = jwtUtil.parseToken(token);
-
-        System.out.println("withdraw Id: " + Id);
-
-        Optional<User> user = userService.findUserById(Id);
+        Optional<User> user = userService.findUserById(userId);
         if(!user.isPresent()) {
             throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
         }
 
-        // Login Type에 따라서 먼저 OAuth의 계정을 삭제
+        return switch (user.get().getLoginType()) {
+            case PASSWORD -> {
+                deleteUserData(userId);
+                yield ResponseEntity.ok().build();
+            }
+            case KAKAO -> ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(kakaoUtil.getAuthorizeCodeUrl()))
+                    .build();
+            default -> throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        };
+    }
 
-    }*/
+    public UUID withdrawOauthUserId(UserOauthDto user) {
+        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), user.getLoginType());
+
+        if(existingUser.isEmpty()) {
+            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        UUID userId = existingUser.get().getId();
+        return userId;
+    }
+
+    public void deleteUserData(UUID userId) {
+
+    }
 }

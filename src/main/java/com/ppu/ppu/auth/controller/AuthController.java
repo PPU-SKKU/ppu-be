@@ -5,14 +5,18 @@ import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
 import com.ppu.ppu.user.domain.LoginType;
+import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.utils.KakaoUtil;
 import com.ppu.ppu.utils.dto.KakaoDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,7 +46,8 @@ public class AuthController {
 
     @GetMapping("/login/kakao/callback")
     public ResponseEntity<UserLoginResponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
-        return ResponseEntity.ok().body(oAuthService.kakaoLogin(dto));
+        UserOauthDto user = oAuthService.getUserOauthDto(dto);
+        return ResponseEntity.ok().body(authService.loginOauth(user));
     }
 
     @PostMapping("/refresh")
@@ -50,9 +55,19 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.refresh(dto));
     }
 
-    /*@DeleteMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(HttpServletRequest request) {
-        authService.withdraw(request);
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> startWithdraw(HttpServletRequest request) {
+        return authService.withdrawPreHandler(request);
+    }
+
+    @GetMapping("/withdraw/kakao/callback")
+    public ResponseEntity<Void> kakaoWithdrawCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
+        UserOauthDto user = oAuthService.getUserOauthDto(dto);
+        UUID userId = authService.withdrawOauthUserId(user);
+
+        oAuthService.unlinkKakaoUser(dto);
+        authService.deleteUserData(userId);
+
         return ResponseEntity.ok().build();
-    }*/
+    }
 }
