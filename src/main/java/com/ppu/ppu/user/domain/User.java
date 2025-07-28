@@ -1,6 +1,7 @@
-package com.ppu.ppu.user;
+package com.ppu.ppu.user.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +22,7 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "password", length = 255)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
     @Column(name = "name", length = 50)
@@ -33,7 +34,8 @@ public class User {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
-    @Column(name = "email", length = 255)
+    @Email
+    @Column(name = "email", length = 255, nullable = false)
     private String email;
 
     @Column(name = "birth")
@@ -43,9 +45,9 @@ public class User {
     @Column(name = "gender")
     private Gender gender;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "login_type")
-//    private LoginType loginType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "login_type", nullable = false)
+    private LoginType loginType;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
