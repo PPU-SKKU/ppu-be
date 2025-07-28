@@ -22,7 +22,7 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "password", length = 255, nullable = false)
+    @Column(name = "password", length = 255)
     private String password;
 
     @Column(name = "name", length = 50)
