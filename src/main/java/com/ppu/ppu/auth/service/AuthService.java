@@ -7,6 +7,7 @@ import com.ppu.ppu.user.domain.LoginType;
 import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.utils.JwtUtil;
+import com.ppu.ppu.utils.TokenIssueUtil;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class AuthService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final TokenIssueService tokenIssueService;
+    private final TokenIssueUtil tokenIssueService;
 
     public void signup(UserCreateDto user, LoginType loginType) {
         Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);

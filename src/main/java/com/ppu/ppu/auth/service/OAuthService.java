@@ -22,7 +22,6 @@ public class OAuthService {
     public UserLoginResponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
         // extract code
         String code = dto.getCode();
-//        System.out.println("Kakao User Code: " + code);
 
         // receive kakao access token
         KakaoDTO.OAuthToken token;
@@ -32,7 +31,6 @@ public class OAuthService {
             throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
         }
         String kakaoAccessToken = token.getAccess_token();
-//        System.out.println("Kakao User Token: " + kakaoAccessToken);
 
         // Kakao에서 정보 추출
         // 이미 유저가 존재하는 경우 email과 LoginType만 사용

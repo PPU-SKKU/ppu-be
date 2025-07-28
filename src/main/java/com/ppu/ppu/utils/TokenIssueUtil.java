@@ -1,16 +1,15 @@
-package com.ppu.ppu.auth.service;
+package com.ppu.ppu.utils;
 
 import com.ppu.ppu.auth.dto.UserLoginResponseDto;
 import com.ppu.ppu.auth.dto.UserRefreshResponseDto;
-import com.ppu.ppu.utils.JwtUtil;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Service
-@AllArgsConstructor
-public class TokenIssueService {
+@Component
+@RequiredArgsConstructor
+public class TokenIssueUtil {
     private final JwtUtil jwtUtil;
 
     public UserLoginResponseDto issueAllToken(UUID userId) {
