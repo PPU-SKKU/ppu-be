@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, String> {
+    boolean existsByEmailAndLoginType(String email, LoginType loginType);
     Optional<User> findByEmailAndLoginType(String email, LoginType loginType);
     Optional<User> findByNickname(String nickname);
     Optional<User> findById(UUID id);
@@ -22,4 +23,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("UPDATE User u SET u.profileImage = :profileImage WHERE u.id = :id")
     int updateProfileImageById(@Param("id") UUID id, @Param("profileImage") String filePath);
+
+    @Modifying
+    @Query("DELETE from User u WHERE u.id = :id")
+    int deleteUserById(@Param("id") UUID id);
 }

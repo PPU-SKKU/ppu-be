@@ -1,4 +1,4 @@
-package com.ppu.ppu.utils.config;
+package com.ppu.ppu.utils.kakao;
 
 import lombok.Getter;
 import org.springframework.context.annotation.Bean;
@@ -14,11 +14,9 @@ public class KakaoConfig {
     private final String KAKAO_AUTH_URI = "https://kauth.kakao.com";
     private final String KAKAO_API_URI = "https://kapi.kakao.com";
     private final String CLIENT_ID;
-    private final String REDIRECT_URI;
 
     public KakaoConfig() {
         CLIENT_ID = System.getenv("KAKAO_REST_API_KEY");
-        REDIRECT_URI = System.getenv("KAKAO_REDIRECT_URI");
     }
 
     @Bean

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,37 +21,38 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final TokenIssueUtil tokenIssueService;
 
-    public void signup(UserCreateDto user, LoginType loginType) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
-        if (existingUser.isPresent()) {
+    public void signup(UserCreateDto dto) {
+        if(userService.existsUserByEmailAndLoginType(dto.getEmail(), LoginType.PASSWORD)) {
             throw new AuthException(ErrorCode.AUTH_SIGNUP_FAILED);
         }
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        userService.createUser(user, loginType);
+
+        String hashedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
+        dto.setPassword(hashedPassword);
+        userService.createUser(dto, LoginType.PASSWORD);
     }
 
-    public UserLoginResponseDto loginPw(UserPwLoginDto user) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), LoginType.PASSWORD);
+    public UserLoginResponseDto loginPw(UserPwLoginDto dto) {
+        User user = userService.getUserByEmailAndLoginType(dto.getEmail(), LoginType.PASSWORD)
+                .orElseThrow(() -> new AuthException(ErrorCode.AUTH_LOGIN_FAILED));
 
-        if (existingUser.isEmpty() || !BCrypt.checkpw(user.getPassword(), existingUser.get().getPassword())) {
-            throw new AuthException(ErrorCode.AUTH_LOGIN_FAILED);
-        }
-
-        return tokenIssueService.issueAllToken(existingUser.get().getId());
+        return tokenIssueService.issueAllToken(user.getId());
     }
 
-    public UserLoginResponseDto loginOauth(UserCreateDto user, LoginType loginType) {
-        Optional<User> existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
+    public UserLoginResponseDto loginOauth(UserOauthDto dto) {
+        User user = userService.getUserByEmailAndLoginType(dto.getEmail(), dto.getLoginType())
+                .orElseGet(() -> userService.createUser(mapFromUserOauthToUserCreateDto(dto), dto.getLoginType()));
 
-        // signup proceed
-        if(existingUser.isEmpty()) {
-            signup(user, loginType);
-            existingUser = userService.getUserByEmailAndLoginType(user.getEmail(), loginType);
-        }
+        return tokenIssueService.issueAllToken(user.getId());
+    }
 
-        // login proceed
-        return tokenIssueService.issueAllToken(existingUser.get().getId());
+    private UserCreateDto mapFromUserOauthToUserCreateDto(UserOauthDto dto) {
+        return UserCreateDto.builder()
+                .email(dto.getEmail())
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .birth(dto.getBirth())
+                .gender(dto.getGender())
+                .build();
     }
 
     public UserRefreshResponseDto refresh(UserRefreshDto dto) {
@@ -68,30 +68,4 @@ public class AuthService {
 
         return tokenIssueService.issueAccessToken(id);
     }
-
-    /*public void withdraw(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-
-        if(token == null || !token.startsWith("Bearer ")) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        token = token.substring(7);
-        if(!jwtUtil.validateToken(token)) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        System.out.println("withdraw token: " + token);
-        String Id = jwtUtil.parseToken(token);
-
-        System.out.println("withdraw Id: " + Id);
-
-        Optional<User> user = userService.findUserById(Id);
-        if(!user.isPresent()) {
-            throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
-        }
-
-        // Login Type에 따라서 먼저 OAuth의 계정을 삭제
-
-    }*/
 }

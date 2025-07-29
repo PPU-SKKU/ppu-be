@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRefreshResponseDto {
-    private String refreshToken;
+    private String accessToken;
 }
