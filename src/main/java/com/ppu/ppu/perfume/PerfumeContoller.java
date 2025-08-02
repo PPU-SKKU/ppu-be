@@ -21,7 +21,7 @@ public class PerfumeContoller {
         //TODO 페이지네이션
     }
 
-    @GetMapping("/")
+    @GetMapping("/{perfumeId}")
     public PerfumeResponseDto getPerfumeById(@PathVariable(name = "perfumeId", required = true) Long perfumeId) {
         if (perfumeId == null) {
             throw new IllegalArgumentException("향수 ID path variable 누락");
@@ -31,7 +31,7 @@ public class PerfumeContoller {
     }
 
     @GetMapping("/search")
-    public List<PerfumeResponseDto> searchPerfumes(String searchKeyword) {
+    public List<PerfumeResponseDto> searchPerfumes(@RequestParam(name = "keyword", required = true) String searchKeyword) {
         if (searchKeyword == null || searchKeyword.isEmpty()) {
             throw new IllegalArgumentException("검색어 query param 누락");
         }
