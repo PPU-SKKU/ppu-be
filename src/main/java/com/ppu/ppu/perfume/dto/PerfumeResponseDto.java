@@ -1,6 +1,8 @@
 package com.ppu.ppu.perfume.dto;
 
 
+import com.ppu.ppu.perfume.domain.Brand;
+import com.ppu.ppu.perfume.domain.Perfume;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,5 +26,22 @@ public class PerfumeResponseDto {
         this.brandKoreanName = brandKoreanName;
         this.brandOriginalName = brandOriginalName;
         this.image = image;
+    }
+
+    public static PerfumeResponseDto fromEntity(Perfume perfume) {
+        PerfumeResponseDto dto = new PerfumeResponseDto();
+        dto.setId((long) perfume.getId());
+        dto.setKoreanName(perfume.getKoreanName());
+        dto.setOriginalName(perfume.getOriginalName());
+
+        Brand brand = perfume.getBrand();
+        if (brand != null) {
+            dto.setBrandKoreanName(brand.getKoreanName());
+            dto.setBrandOriginalName(brand.getOriginalName());
+        }
+
+        dto.setImage(perfume.getImage());
+
+        return dto;
     }
 }
