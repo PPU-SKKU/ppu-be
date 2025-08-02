@@ -2,13 +2,9 @@ package com.ppu.ppu.perfume;
 
 
 import com.ppu.ppu.perfume.dto.PerfumeResponseDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/perfumes")
@@ -21,16 +17,25 @@ public class PerfumeContoller {
 
     @GetMapping("/")
     public List<PerfumeResponseDto> getAllPerfumes() {
-        return new ArrayList<>();
+        return perfumeService.getAllPerfumes();
+        //TODO 페이지네이션
     }
 
     @GetMapping("/")
     public PerfumeResponseDto getPerfumeById(@PathVariable(name = "perfumeId", required = true) Long perfumeId) {
-        return new PerfumeResponseDto();
+        if (perfumeId == null) {
+            throw new IllegalArgumentException("향수 ID path variable 누락");
+        }
+        // TODO 커스텀 예외 처리
+        return perfumeService.getPerfumeById(perfumeId);
     }
 
     @GetMapping("/search")
     public List<PerfumeResponseDto> searchPerfumes(String searchKeyword) {
-        return new ArrayList<>();
+        if (searchKeyword == null || searchKeyword.isEmpty()) {
+            throw new IllegalArgumentException("검색어 query param 누락");
+        }
+        // TODO 커스텀 예외 처리
+        return perfumeService.searchPerfumesByKeyword(searchKeyword);
     }
 }

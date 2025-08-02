@@ -23,6 +23,7 @@ public class PerfumeService {
         return perfumeRepository.findById(perfumeId)
                 .map(PerfumeResponseDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Perfume not found"));
+        // TODO 커스텀 예외 처리
     }
 
     public List<PerfumeResponseDto> searchPerfumesByKeyword(String searchKeyword) {
