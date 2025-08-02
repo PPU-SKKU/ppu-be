@@ -16,8 +16,9 @@ public class Perfume {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "brand_id")
-    private int brandId;
+    @OneToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Brand brand;
 
     @Column(name = "original_name")
     private String originalName;
