@@ -1,4 +1,4 @@
-package com.ppu.ppu.perfume;
+package com.ppu.ppu.perfume.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
