@@ -1,4 +1,4 @@
-package com.ppu.ppu.user.domain;
+package com.ppu.ppu.user;
 
 public enum LoginType {
     KAKAO,

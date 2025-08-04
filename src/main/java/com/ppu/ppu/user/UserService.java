@@ -1,10 +1,7 @@
 package com.ppu.ppu.user;
 
 
-import com.ppu.ppu.user.domain.LoginType;
-import com.ppu.ppu.user.domain.User;
 import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +51,15 @@ public class UserService {
 
     public Optional<User> findUserById(UUID id){
         return userRepository.findById(id);
+    }
+
+    @Transactional
+    public int updateNicknameById(UUID id, String newNickname) {
+        return userRepository.updateNicknameById(id, newNickname);
+    }
+
+    @Transactional
+    public int updateProfileImageById(UUID id, String newProfile) {
+        return userRepository.updateProfileImageById(id, newProfile);
     }
 }

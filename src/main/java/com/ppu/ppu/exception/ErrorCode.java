@@ -20,7 +20,12 @@ public enum ErrorCode {
 
     AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "invalid token"),
     AUTH_EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "expired token"),
-    AUTH_UNAUTHORIZED(HttpStatus.FORBIDDEN, "unauthorized");
+    AUTH_UNAUTHORIZED(HttpStatus.FORBIDDEN, "unauthorized"),
+
+    // User
+    USER_LOAD_FAILED(HttpStatus.BAD_REQUEST, "user load failed"),
+
+    ;
 
     private final HttpStatus status;
     private final String message;

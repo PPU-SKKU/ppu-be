@@ -1,7 +1,5 @@
-package com.ppu.ppu.user.repository;
+package com.ppu.ppu.user;
 
-import com.ppu.ppu.user.domain.LoginType;
-import com.ppu.ppu.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
