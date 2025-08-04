@@ -4,7 +4,7 @@ import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.UserService;
-import com.ppu.ppu.user.domain.User;
+import com.ppu.ppu.user.User;
 import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
