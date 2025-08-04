@@ -1,14 +1,12 @@
 package com.ppu.ppu.auth.controller;
 
 
+import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
-import com.ppu.ppu.user.LoginType;
-import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.auth.dto.UserLoginReponseDto;
-import com.ppu.ppu.auth.dto.UserPwLoginDto;
-import com.ppu.ppu.utils.KakaoUtil;
-import com.ppu.ppu.utils.dto.KakaoDTO;
+import com.ppu.ppu.auth.service.WithdrawService;
+import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,35 +19,46 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final KakaoUtil kakaoUtil;
     private final OAuthService oAuthService;
+    private final WithdrawService withdrawService;
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody UserCreateDto user) {
-        authService.signup(user, LoginType.PASSWORD);
-        return ResponseEntity.ok().build();
+        authService.signup(user);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginReponseDto> login(@Valid @RequestBody UserPwLoginDto user) {
-        return ResponseEntity.ok().body(authService.loginPw(user));
+    public ResponseEntity<UserLoginResponseDto> login(@Valid @RequestBody UserPwLoginDto user) {
+        return ResponseEntity.ok(authService.loginPw(user));
     }
 
     @GetMapping("/login/kakao")
     public ResponseEntity<Void> kakaoLogin() {
+        String uri = oAuthService.getKakaoLoginAuthorizeUrl();
         return ResponseEntity.status(302)
-                .location(URI.create(kakaoUtil.getAuthorizeCodeUrl()))
+                .location(URI.create(uri))
                 .build();
     }
 
     @GetMapping("/login/kakao/callback")
-    public ResponseEntity<UserLoginReponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoDTO.AuthorizeCode dto) {
-        return ResponseEntity.ok().body(oAuthService.kakaoLogin(dto));
+    public ResponseEntity<UserLoginResponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
+        return ResponseEntity.ok(oAuthService.kakaoLogin(dto));
     }
 
-    /*@DeleteMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(HttpServletRequest request) {
-        authService.withdraw(request);
-        return ResponseEntity.ok().build();
-    }*/
+    @PostMapping("/refresh")
+    public ResponseEntity<UserRefreshResponseDto> refresh(@Valid @RequestBody UserRefreshDto dto) {
+        return ResponseEntity.ok(authService.refresh(dto));
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> startWithdraw(HttpServletRequest request) {
+        return withdrawService.withdrawPreHandler(request);
+    }
+
+    @GetMapping("/withdraw/kakao/callback")
+    public ResponseEntity<Void> kakaoWithdrawCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
+        withdrawService.withdrawKakao(dto);
+        return ResponseEntity.noContent().build();
+    }
 }

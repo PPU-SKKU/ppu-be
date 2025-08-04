@@ -6,24 +6,35 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtUtil {
     private final String secret;
-    private final Long exp;
+    private final Long accessExp;
+    private final Long refreshExp;
 
     public JwtUtil() {
         this.secret = System.getenv("TOKEN_SECRET");
-        this.exp = Long.valueOf(System.getenv("DEV_TOKEN_EXP"));
+        this.accessExp = Long.valueOf(System.getenv("ACCESS_TOKEN_EXP"));
+        this.refreshExp = Long.valueOf(System.getenv("REFRESH_TOKEN_EXP"));
     }
 
-    public String generateToken(String id) {
+    private String generateToken(UUID id, Long exp) {
         return Jwts.builder()
                 .claim("id", id)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + exp))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public String generateAccessToken(UUID id) {
+        return generateToken(id, accessExp);
+    }
+
+    public String generateRefreshToken(UUID id) {
+        return generateToken(id, refreshExp);
     }
 
     public String parseToken(String token) {

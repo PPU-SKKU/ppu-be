@@ -1,13 +1,15 @@
 package com.ppu.ppu.auth.service;
 
+import com.ppu.ppu.auth.dto.UserOauthDto;
 import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.Gender;
 import com.ppu.ppu.user.LoginType;
-import com.ppu.ppu.auth.dto.UserCreateDto;
-import com.ppu.ppu.auth.dto.UserLoginReponseDto;
-import com.ppu.ppu.utils.KakaoUtil;
-import com.ppu.ppu.utils.dto.KakaoDTO;
+import com.ppu.ppu.auth.dto.UserLoginResponseDto;
+import com.ppu.ppu.utils.kakao.KakaoAuthPurpose;
+import com.ppu.ppu.utils.kakao.KakaoUtil;
+import com.ppu.ppu.utils.kakao.dto.KakaoOauthInfo;
+import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,78 +21,54 @@ public class OAuthService {
     private final KakaoUtil kakaoUtil;
     private final AuthService authService;
 
-    public UserLoginReponseDto kakaoLogin(KakaoDTO.AuthorizeCode dto) {
-        // extract code
-        String code = dto.getCode();
-//        System.out.println("Kakao User Code: " + code);
+    public String getKakaoLoginAuthorizeUrl() {
+        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.LOGIN);
+    }
 
-        // receive kakao access token
-        KakaoDTO.OAuthToken token;
-        try {
-            token = kakaoUtil.requestToken(code);
-        } catch (Exception e) {
-            throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
-        }
-        String kakaoAccessToken = token.getAccess_token();
-//        System.out.println("Kakao User Token: " + kakaoAccessToken);
+    public String getKakaoWithdrawAuthorizeUrl() {
+        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.WITHDRAW);
+    }
 
-        // Kakao에서 정보 추출
-        // 이미 유저가 존재하는 경우 email과 LoginType만 사용
-        // 새로 유저를 signup하는 경우는 모든 정보 사용
-        KakaoDTO.UserProfile profile;
-        try {
-             profile = kakaoUtil.requestUserProfile(kakaoAccessToken);
-        } catch (Exception e) {
-            throw new AuthException(ErrorCode.AUTH_OAUTH_KAKAO_API_FAILED);
-        }
+    public UserLoginResponseDto kakaoLogin(KakaoUserAuthorizeCodeDto dto) {
+        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.LOGIN);
+        return authService.loginOauth(mapFromKakaoToUserDto(info));
+    }
 
+    public UserOauthDto kakaoWithdraw(KakaoUserAuthorizeCodeDto dto) {
+        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.WITHDRAW);
+        kakaoUtil.requestUserUnlink(info.getAccessToken());
+        return mapFromKakaoToUserDto(info);
+    }
 
-        UserCreateDto user = new UserCreateDto();
+    private UserOauthDto mapFromKakaoToUserDto(KakaoOauthInfo dto) {
+        var profile = dto.getProfile().getKakaoAccount();
 
-        // 1. email
-        try {
-            String email = profile.getKakaoAccount().getEmail();
-            user.setEmail(email);
-        } catch (Exception e) {
+        if(profile.getEmail() == null) {
             throw new AuthException(ErrorCode.AUTH_OAUTH_NO_EMAIL);
         }
 
-        // 2. name
-        // TODO: test for name
-        try {
-            String name = profile.getKakaoAccount().getName();
-            user.setName(name);
-        } catch (Exception ignore) {}
+        String nickname = (profile.getProfile() != null) ? profile.getProfile().getNickname() : null;
 
-        // 3. gender
-        // TODO: test for gender
-        try {
-            String gender = profile.getKakaoAccount().getGender();
-            Gender genderEnum = (gender == null) ? null : Gender.valueOf(gender);
-            user.setGender(genderEnum);
-        } catch (Exception ignore) {}
+        String genderStr = profile.getGender();
+        Gender gender = (genderStr != null) ? Gender.valueOf(genderStr) : null;
 
-        // 4. nickname
-        try {
-            String nickname = profile.getKakaoAccount().getProfile().getNickname();
-            user.setNickname(nickname);
-        } catch (Exception ignore) {}
+        LocalDate birthday = null;
+        if(profile.getBirthday_type() != null) {
+            String birthYear = profile.getBirthyear();
+            String birthDate = profile.getBirthday();
+            String birthType = profile.getBirthday_type();
+            birthday = LocalDate.parse(birthYear + "-" + birthDate.substring(0, 2) + "-" + birthDate.substring(2, 4));
 
-        // 5. birth
-        // TODO: test for birth
-        try {
-            String birthYear = profile.getKakaoAccount().getBirthyear();
-            String birthDate = profile.getKakaoAccount().getBirthday();
-            String birthType = profile.getKakaoAccount().getBirthday_type();
+            // TODO: birthType에 따른 음력->양력 변경
+        }
 
-            LocalDate birthday = null;
-            if (birthType != null) {
-                birthday = LocalDate.parse(birthYear + "-" + birthDate.substring(0, 2) + "-" + birthDate.substring(2, 4));
-                // TODO: birthType에 따른 음력->양력 변경
-            }
-            user.setBirth(birthday);
-        } catch (Exception ignore) {}
-
-        return authService.loginOauth(user, LoginType.KAKAO);
+        return UserOauthDto.builder()
+                .email(profile.getEmail())
+                .name(profile.getName())
+                .nickname(nickname)
+                .gender(gender)
+                .birth(birthday)
+                .loginType(LoginType.KAKAO)
+                .build();
     }
 }
