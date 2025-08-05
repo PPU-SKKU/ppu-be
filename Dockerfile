@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=/home/gradle/.gradle \
     ./gradlew build -x test --parallel
 
 # 2. Run Stage
-FROM --platform=$TARGETPLATFORM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
