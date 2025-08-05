@@ -8,7 +8,7 @@ WORKDIR /app
 #RUN chmod +x ./gradlew
 
 #RUN --mount=type=cache,target=/home/gradle/.gradle \
-    ./gradlew dependencies --parallel --continue > /dev/null 2>&1 || true
+#    ./gradlew dependencies --parallel --continue > /dev/null 2>&1 || true
 
 COPY . /app
 RUN --mount=type=cache,target=/home/gradle/.gradle \
