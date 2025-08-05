@@ -4,7 +4,7 @@ FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
 WORKDIR /app
 
 COPY gradlew gradlew.bat build.gradle settings.gradle gradle.properties* /app/
-COPY gradle /app/gradle/
+COPY gradle/ /app/gradle/
 RUN chmod +x ./gradlew
 
 RUN --mount=type=cache,target=/home/gradle/.gradle \
