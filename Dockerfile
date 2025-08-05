@@ -1,5 +1,5 @@
 # 1. Build Stage
-FROM gradle:8.2.0-jdk17 AS builder
+FROM gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
