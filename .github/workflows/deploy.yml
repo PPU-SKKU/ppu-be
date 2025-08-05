@@ -47,3 +47,9 @@ jobs:
             echo "DEV_TOKEN_EXP=${{ secrets.DEV_TOKEN_EXP }}" >> .env
             echo "STATIC_FILE_PATH=${{ secrets.STATIC_FILE_PATH }}" >> .env
             sudo docker-compose -f docker-compose-dev.yml up -d
+
+      - name: Upload Gradle problems report (if exists)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-problems-report
+          path: build/reports/problems/problems-report.html
