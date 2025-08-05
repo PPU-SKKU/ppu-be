@@ -8,7 +8,7 @@ COPY gradle /app/gradle
 RUN chmod +x ./gradlew
 
 RUN --mount=type=cache,target=/home/gradle/.gradle \
-    ./gradlew build -x test --parallel --continue || true
+    ./gradlew dependencies --parallel --continue || true
 
 COPY . /app
 RUN --mount=type=cache,target=/home/gradle/.gradle \
