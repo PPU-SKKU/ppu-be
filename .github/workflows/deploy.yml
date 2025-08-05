@@ -21,8 +21,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          name: ppuBuilder
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -30,8 +28,6 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:latest
-          cache-from: type=gha,scope=gradle
-          cache-to: type=gha,scope=gradle,mode=max
 
       - name: SSH Login
         uses: appleboy/ssh-action@master
