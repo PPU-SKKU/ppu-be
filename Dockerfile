@@ -4,15 +4,14 @@ FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
 WORKDIR /app
 
 #COPY gradlew gradlew.bat build.gradle settings.gradle gradle.properties* /app/
-#COPY gradle/ /app/gradle/
+#COPY gradle /app/gradle
 #RUN chmod +x ./gradlew
-
+#
 #RUN --mount=type=cache,target=/home/gradle/.gradle \
-#    ./gradlew dependencies --parallel --continue > /dev/null 2>&1 || true
+#    ./gradlew dependencies --parallel --continue || true
 
 COPY . /app
-RUN --mount=type=cache,target=/home/gradle/.gradle \
-    ./gradlew build -x test --parallel
+RUN ./gradlew build -x test --parallel
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim
