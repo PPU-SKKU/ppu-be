@@ -3,11 +3,11 @@ FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
-COPY gradlew gradlew.bat build.gradle settings.gradle gradle.properties* /app/
-COPY gradle/ /app/gradle/
-RUN chmod +x ./gradlew
+#COPY gradlew gradlew.bat build.gradle settings.gradle gradle.properties* /app/
+#COPY gradle/ /app/gradle/
+#RUN chmod +x ./gradlew
 
-RUN --mount=type=cache,target=/home/gradle/.gradle \
+#RUN --mount=type=cache,target=/home/gradle/.gradle \
     ./gradlew dependencies --parallel --continue > /dev/null 2>&1 || true
 
 COPY . /app
@@ -23,4 +23,5 @@ RUN mkdir -p /app/static
 
 COPY --from=builder /app/build/libs/*.jar app.jar
 
+USER nobody
 CMD ["java", "-jar", "app.jar"]
