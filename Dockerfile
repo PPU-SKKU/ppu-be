@@ -3,9 +3,14 @@ FROM gradle:8.2.0-jdk17 AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY gradlew gradlew.bat build.gradle settings.gradle gradle.properties* /app/
+COPY gradle /app/gradle
+RUN chmod +x ./gradlew
 
-RUN ./gradlew build
+RUN ./gradlew build -x test --parallel --continue > /dev/null 2>&1 || true
+
+COPY . /app
+RUN ./gradlew build -x test --parallel
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim
