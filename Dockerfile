@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY build.gradle settings.gradle gradle.properties* gradlew ./
 COPY gradle ./gradle
-RUN ./gradlew dependencies > /dev/null 2>&1 || true
+RUN --mount=type=cache,target=/home/gradle/.gradle \
+    ./gradlew dependencies --no-daemon --parallel > /dev/null 2>&1 || true
 
 COPY . /app
 RUN ./gradlew build -x test --parallel
