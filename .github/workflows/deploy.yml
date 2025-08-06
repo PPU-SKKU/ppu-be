@@ -30,7 +30,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:latest
 
-      - name: Copy docker-compose-devl.yml
+      - name: Copy docker-compose-dev.yml
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
