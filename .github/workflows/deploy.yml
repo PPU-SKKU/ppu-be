@@ -49,5 +49,4 @@ jobs:
             echo "STATIC_FILE_PATH=${{ secrets.STATIC_FILE_PATH }}" >> .env
             
             sudo docker-compose -f docker-compose-dev.yml pull
-            sudo docker-compose -f docker-compose-dev.yml down
-            sudo docker-compose -f docker-compose-dev.yml up -d
+            sudo docker-compose -f docker-compose-dev.yml up -d --pull always --force-recreate
