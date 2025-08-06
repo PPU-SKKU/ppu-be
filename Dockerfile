@@ -1,5 +1,5 @@
 # 1. Build Stage
-FROM --platform=linux/amd64 gradle:8.2.0-jdk17-alpine AS builder
+FROM --platform=$BUILDPLATFORM  gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
