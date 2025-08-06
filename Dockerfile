@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/home/gradle/.gradle \
 
 COPY . /app
 RUN --mount=type=cache,target=/home/gradle/.gradle \
-    ./gradlew build -x test --parallel
+    ./gradlew build -x test --parallel --configuration-cache --no-daemon
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim
