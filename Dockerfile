@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY build.gradle settings.gradle gradle.properties* gradlew ./
 COPY gradle ./gradle
-RUN ./gradlew dependencies test --parallel || true
+RUN ./gradlew dependencies --parallel --continue > /dev/null 2>&1 || true
 
 COPY . /app
 RUN ./gradlew build -x test --parallel
