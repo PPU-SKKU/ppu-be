@@ -4,8 +4,7 @@ FROM --platform=$BUILDPLATFORM  gradle:8.2.0-jdk17-alpine AS builder
 WORKDIR /app
 
 COPY . /app
-RUN --mount=type=cache,target=/home/gradle/.gradle \
-    ./gradlew build -x test --parallel --configuration-cache --no-daemon
+RUN ./gradlew build -x test --parallel
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim
