@@ -41,6 +41,11 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
+      - name: Save Docker layer cache
+        if: always()
+        run: |
+          ls -1 /tmp/.buildx-cache || true
+
       - name: Copy docker-compose-dev.yml
         uses: appleboy/scp-action@master
         with:
