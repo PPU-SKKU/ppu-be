@@ -45,15 +45,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
-
-      - name: Save docker layer cache
-        uses: actions/cache@v3
-        if: success()
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('Dockerfile', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+          cache-from: type=gha
+          cache-to: type=gha
 
       - name: Copy docker-compose-dev.yml
         uses: appleboy/scp-action@master
