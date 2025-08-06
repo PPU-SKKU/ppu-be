@@ -44,7 +44,7 @@ jobs:
       - name: Save Docker layer cache
         if: always()
         run: |
-          ls -1 /tmp/.buildx-cache || true
+          ls -1 /tmp/.buildx-cache || echo "cache not created"
 
       - name: Copy docker-compose-dev.yml
         uses: appleboy/scp-action@master
