@@ -3,11 +3,6 @@ FROM --platform=$BUILDPLATFORM  gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
-#COPY build.gradle settings.gradle gradle.properties* gradlew ./
-#COPY gradle ./gradle
-#RUN --mount=type=cache,target=/home/gradle/.gradle \
-#    ./gradlew dependencies --no-daemon --parallel > /dev/null 2>&1 || true
-
 COPY . /app
 RUN --mount=type=cache,target=/home/gradle/.gradle \
     ./gradlew build -x test --parallel --configuration-cache --no-daemon
