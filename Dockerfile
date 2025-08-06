@@ -3,6 +3,10 @@ FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
+COPY build.gradle settings.gradle gradle.properties* gradlew ./
+COPY gradle ./gradle
+RUN ./gradlew dependencies test --parallel || true
+
 COPY . /app
 RUN ./gradlew build -x test --parallel
 
