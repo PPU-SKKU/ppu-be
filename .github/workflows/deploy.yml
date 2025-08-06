@@ -30,7 +30,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:latest
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:buildcache
-          cache-to:   type=registry,ref=${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:buildcache,mode=max,compression=zstd
+          cache-to:   type=registry,ref=${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:buildcache,mode=min,compression=zstd
 
       - name: Copy docker-compose-dev.yml
         uses: appleboy/scp-action@master
