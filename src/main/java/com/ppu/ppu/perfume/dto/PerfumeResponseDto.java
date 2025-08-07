@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PerfumeResponseDto {
-    Long id;
+    Integer id;
     String koreanName;
     String originalName;
     String brandKoreanName;
@@ -19,7 +19,7 @@ public class PerfumeResponseDto {
     public PerfumeResponseDto() {
     }
 
-    public PerfumeResponseDto(Long id, String koreanName, String originalName, String brandKoreanName, String brandOriginalName, String image) {
+    public PerfumeResponseDto(Integer id, String koreanName, String originalName, String brandKoreanName, String brandOriginalName, String image) {
         this.id = id;
         this.koreanName = koreanName;
         this.originalName = originalName;
@@ -30,7 +30,7 @@ public class PerfumeResponseDto {
 
     public static PerfumeResponseDto fromEntity(Perfume perfume) {
         PerfumeResponseDto dto = new PerfumeResponseDto();
-        dto.setId((long) perfume.getId());
+        dto.setId(perfume.getId());
         dto.setKoreanName(perfume.getKoreanName());
         dto.setOriginalName(perfume.getOriginalName());
 

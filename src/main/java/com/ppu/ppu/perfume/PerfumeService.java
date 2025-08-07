@@ -19,7 +19,7 @@ public class PerfumeService {
                 .toList();
     }
 
-    public PerfumeResponseDto getPerfumeById(Long perfumeId) {
+    public PerfumeResponseDto getPerfumeById(Integer perfumeId) {
         return perfumeRepository.findById(perfumeId)
                 .map(PerfumeResponseDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Perfume not found"));

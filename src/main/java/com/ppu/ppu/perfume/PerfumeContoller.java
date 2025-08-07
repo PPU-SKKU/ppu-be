@@ -23,7 +23,7 @@ public class PerfumeContoller {
     }
 
     @GetMapping("/{perfumeId}")
-    public ResponseEntity<PerfumeResponseDto> getPerfumeById(@PathVariable(name = "perfumeId", required = true) Long perfumeId) {
+    public ResponseEntity<PerfumeResponseDto> getPerfumeById(@PathVariable(name = "perfumeId", required = true) Integer perfumeId) {
         if (perfumeId == null) {
             throw new IllegalArgumentException("향수 ID path variable 누락");
         }

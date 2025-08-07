@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
+public interface PerfumeRepository extends JpaRepository<Perfume, Integer> {
     @Query("SELECT p FROM Perfume p JOIN p.brand b WHERE p.id = :brandId")
     Perfume findByBrandId(int brandId);
 
