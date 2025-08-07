@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: local.Dockerfile
     image: ppu-app-local:latest
     volumes:
       - ./src:/app/src
