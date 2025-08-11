@@ -37,6 +37,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            sudo docker-compose -f docker-compose-dev.yml down
+            sudo docker image prune -y
             touch .env
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
