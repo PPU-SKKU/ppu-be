@@ -8,11 +8,9 @@ services:
     image: ppu-app-local:latest
     volumes:
       - ./src:/app/src
-      - ./static:/app/static
     container_name: ppu-container
     ports:
       - "8080:8080"
-    command: ./gradlew bootRun
     restart: always
     env_file:
       - ./.env

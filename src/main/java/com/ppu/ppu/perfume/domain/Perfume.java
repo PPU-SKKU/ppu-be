@@ -1,12 +1,9 @@
-package com.ppu.ppu.perfume;
+package com.ppu.ppu.perfume.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
-
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,8 +16,9 @@ public class Perfume {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "brand_id")
-    private int brandId;
+    @OneToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Brand brand;
 
     @Column(name = "original_name")
     private String originalName;

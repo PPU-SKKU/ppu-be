@@ -11,8 +11,6 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-RUN mkdir -p /app/static
-
 COPY --from=builder /app/build/libs/*.jar app.jar
 
 USER nobody
