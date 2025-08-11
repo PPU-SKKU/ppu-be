@@ -45,5 +45,9 @@ jobs:
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
             echo "TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}" >> .env
             echo "DEV_TOKEN_EXP=${{ secrets.DEV_TOKEN_EXP }}" >> .env
-            echo "STATIC_FILE_PATH=${{ secrets.STATIC_FILE_PATH }}" >> .env
+            echo "ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }}" >> .env
+            echo "REFRESH_TOKEN_EXP=${{ secrets.REFRESH_TOKEN_EXP }}" >> .env
+            echo "KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}" >> .env
+            echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo "WITHDRAW_REDIRECT_URI=${{ secrets.WITHDRAW_REDIRECT_URI }}" >> .env
             sudo docker-compose -f docker-compose-dev.yml up -d
