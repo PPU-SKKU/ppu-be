@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'develop'
+
 jobs:
   deployment:
     runs-on: ubuntu-latest
@@ -29,6 +30,16 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USER }}/${{ secrets.DOCKERHUB_REPO }}:latest
 
+      - name: Copy docker-compose-dev.yml
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "docker-compose-dev.yml"
+          target: "/home/ubuntu"
+
       - name: SSH Login
         uses: appleboy/ssh-action@master
         with:
@@ -37,6 +48,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            sudo docker-compose -f docker-compose-dev.yml down
+            sudo docker image prune -y
             touch .env
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
@@ -45,5 +58,9 @@ jobs:
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
             echo "TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}" >> .env
             echo "DEV_TOKEN_EXP=${{ secrets.DEV_TOKEN_EXP }}" >> .env
-            echo "STATIC_FILE_PATH=${{ secrets.STATIC_FILE_PATH }}" >> .env
+            echo "ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }}" >> .env
+            echo "REFRESH_TOKEN_EXP=${{ secrets.REFRESH_TOKEN_EXP }}" >> .env
+            echo "KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}" >> .env
+            echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo "WITHDRAW_REDIRECT_URI=${{ secrets.WITHDRAW_REDIRECT_URI }}" >> .env
             sudo docker-compose -f docker-compose-dev.yml up -d
