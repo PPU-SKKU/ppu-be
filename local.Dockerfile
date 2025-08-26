@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew build
+RUN rm -rf ~/.gradle/caches && ./gradlew clean build --no-build-cache --refresh-dependencies
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim

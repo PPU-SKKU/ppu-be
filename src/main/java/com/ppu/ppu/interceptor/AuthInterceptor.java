@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-
+//swagger 사용으로 인한 일시 비활성화
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
@@ -17,17 +17,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-            return false;
-        }
-        String accessToken = authorization.split(" ")[1];
-        if(! jwtUtil.validateToken(accessToken)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-            return false;
-        }
-        request.setAttribute("id" , jwtUtil.parseToken(accessToken));
+//        String authorization = request.getHeader("Authorization");
+//        if (authorization == null) {
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//            return false;
+//        }
+//        String accessToken = authorization.split(" ")[1];
+//        if(! jwtUtil.validateToken(accessToken)) {
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//            return false;
+//        }
+//        request.setAttribute("id" , jwtUtil.parseToken(accessToken));
         return true;
     }
 }
