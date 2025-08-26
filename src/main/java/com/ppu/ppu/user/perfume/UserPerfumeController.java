@@ -2,6 +2,7 @@ package com.ppu.ppu.user.perfume;
 
 import com.ppu.ppu.user.perfume.have.UserPerfumeHaveService;
 import com.ppu.ppu.user.perfume.wish.UserPerfumeWishService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Tag(name = "users perfume", description = "개인 향수 위시 및 보유 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users/perfume")

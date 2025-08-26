@@ -4,6 +4,7 @@ import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.UserException;
 import com.ppu.ppu.user.User;
 import com.ppu.ppu.user.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
 
+@Tag(name = "users profile", description = "회원 프로필 API")
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor

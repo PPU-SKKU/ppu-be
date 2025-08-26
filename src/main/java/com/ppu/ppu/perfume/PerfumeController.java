@@ -2,17 +2,19 @@ package com.ppu.ppu.perfume;
 
 
 import com.ppu.ppu.perfume.dto.PerfumeResponseDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Tag(name = "perfumes", description = "향수 정보 API")
 @RestController
 @RequestMapping("/perfumes")
-public class PerfumeContoller {
+public class PerfumeController {
     private final PerfumeService perfumeService;
 
-    public PerfumeContoller(PerfumeService perfumeService) {
+    public PerfumeController(PerfumeService perfumeService) {
         this.perfumeService = perfumeService;
     }
 
