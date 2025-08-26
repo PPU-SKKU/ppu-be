@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-
-@Component
+//swagger 사용으로 인한 일시 비활성화
+//@Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
 
