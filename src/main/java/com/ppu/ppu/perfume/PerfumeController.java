@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin("*")
 @Tag(name = "perfumes", description = "향수 정보 API")
 @RestController
 @RequestMapping("/perfumes")

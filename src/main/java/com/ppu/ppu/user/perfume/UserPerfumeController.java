@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin("*")
 @Tag(name = "users perfume", description = "개인 향수 위시 및 보유 API")
 @RestController
 @RequiredArgsConstructor

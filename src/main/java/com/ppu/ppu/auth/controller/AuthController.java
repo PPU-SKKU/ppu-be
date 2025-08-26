@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@CrossOrigin("*")
 @Tag(name = "auth", description = "인증 및 인가 관련 API")
 @RestController
 @RequestMapping("/auth")
