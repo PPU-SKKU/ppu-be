@@ -1,10 +1,11 @@
 # 1. Build Stage
-FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
+FROM gradle:8.2.0-jdk17 AS builder
+#FROM --platform=$BUILDPLATFORM gradle:8.2.0-jdk17-alpine AS builder
 
 WORKDIR /app
 
 COPY . /app
-RUN ./gradlew build -x test --parallel
+RUN rm -rf ~/.gradle/caches && ./gradlew clean build --no-build-cache --refresh-dependencies -x test --parallel
 
 # 2. Run Stage
 FROM openjdk:17-jdk-slim
