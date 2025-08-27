@@ -21,24 +21,24 @@ public class OAuthService {
     private final KakaoUtil kakaoUtil;
     private final AuthService authService;
 
-//    public String getKakaoLoginAuthorizeUrl() {
-//        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.LOGIN);
-//    }
-//
-//    public String getKakaoWithdrawAuthorizeUrl() {
-//        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.WITHDRAW);
-//    }
-//
-//    public UserLoginResponseDto kakaoLogin(KakaoUserAuthorizeCodeDto dto) {
-//        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.LOGIN);
-//        return authService.loginOauth(mapFromKakaoToUserDto(info));
-//    }
-//
-//    public UserOauthDto kakaoWithdraw(KakaoUserAuthorizeCodeDto dto) {
-//        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.WITHDRAW);
-//        kakaoUtil.requestUserUnlink(info.getAccessToken());
-//        return mapFromKakaoToUserDto(info);
-//    }
+    public String getKakaoLoginAuthorizeUrl() {
+        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.LOGIN);
+    }
+
+    public String getKakaoWithdrawAuthorizeUrl() {
+        return kakaoUtil.buildAuthorizeUrl(KakaoAuthPurpose.WITHDRAW);
+    }
+
+    public UserLoginResponseDto kakaoLogin(KakaoUserAuthorizeCodeDto dto) {
+        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.LOGIN);
+        return authService.loginOauth(mapFromKakaoToUserDto(info));
+    }
+
+    public UserOauthDto kakaoWithdraw(KakaoUserAuthorizeCodeDto dto) {
+        KakaoOauthInfo info = kakaoUtil.requestKakaoOauthInfo(dto, KakaoAuthPurpose.WITHDRAW);
+        kakaoUtil.requestUserUnlink(info.getAccessToken());
+        return mapFromKakaoToUserDto(info);
+    }
 
     private UserOauthDto mapFromKakaoToUserDto(KakaoOauthInfo dto) {
         var profile = dto.getProfile().getKakaoAccount();
