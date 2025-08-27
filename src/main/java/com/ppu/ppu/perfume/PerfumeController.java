@@ -19,7 +19,7 @@ public class PerfumeController {
         this.perfumeService = perfumeService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<PerfumeResponseDto>> getAllPerfumes() {
         return ResponseEntity.ok(perfumeService.getAllPerfumes());
         //TODO 페이지네이션
