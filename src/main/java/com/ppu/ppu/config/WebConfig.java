@@ -20,7 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "/auth/login/**",
                         "/auth/signup",
                         "/auth/refresh",
-                        "/auth/withdraw/*/callback"
+                        "/auth/withdraw/*/callback",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**"
                 );
     }
 }
