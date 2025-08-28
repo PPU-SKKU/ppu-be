@@ -41,12 +41,24 @@ public class ReviewController {
     }
 
     @PatchMapping("")
-    public void updateReview(@PathVariable UUID reviewId, @RequestBody ReviewUpdateDto reviewUpdateDto) {
+    public void updateReview(HttpServletRequest request, @PathVariable UUID reviewId, @RequestBody ReviewUpdateDto reviewUpdateDto) {
+        UUID userId = (UUID) request.getAttribute("id");
+        ReviewResponseDto review = reviewService.getReviewById(reviewId);
+        if(review == null) throw new RuntimeException("Review not found");
+        else if(!review.getUserId().equals(userId)) {
+            throw new RuntimeException("No permission to update this review");
+        }
         reviewService.updateReview(reviewUpdateDto);
     }
 
     @DeleteMapping("")
-    public ResponseEntity<Void> deleteReview(@RequestBody List<UUID> reviewIds) {
+    public ResponseEntity<Void> deleteReview(HttpServletRequest request, @RequestBody List<UUID> reviewIds) {
+        UUID userId = (UUID) request.getAttribute("id");
+        reviewService.getReviewsByIds(reviewIds).forEach(review -> {
+            if(!review.getUserId().equals(userId)) {
+                throw new RuntimeException("No permission to delete this review");
+            }
+        });
         reviewService.deleteReview(reviewIds);
         return ResponseEntity.noContent().build();
     }

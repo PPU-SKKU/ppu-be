@@ -34,6 +34,12 @@ public class ReviewService {
                 .orElseThrow(() -> new RuntimeException("Review not found"));
     }
 
+    public List<ReviewResponseDto> getReviewsByIds(List<UUID> ids) {
+        return reviewRepository.findAllById(ids).stream()
+                .map(ReviewResponseDto::fromEntity)
+                .toList();
+    }
+
     public void createReview(ReviewCreateDto reviewCreateDto) {
         Review review = ReviewCreateDto.fromDto(reviewCreateDto);
         reviewRepository.save(review);
