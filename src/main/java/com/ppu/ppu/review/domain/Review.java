@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class Review {
     private boolean wearTested;
 
     @Column(name = "tested_date")
-    private LocalDateTime testedDate;
+    private LocalDate testedDate;
 
     @Column(name = "content", length = 2048)
     private String content;
