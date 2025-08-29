@@ -48,8 +48,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            sudo docker-compose -f docker-compose-dev.yml down
-            sudo docker image prune -y
+            sudo docker compose -f docker-compose-dev.yml down
             touch .env
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
@@ -63,4 +62,5 @@ jobs:
             echo "KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}" >> .env
             echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
             echo "WITHDRAW_REDIRECT_URI=${{ secrets.WITHDRAW_REDIRECT_URI }}" >> .env
-            sudo docker-compose -f docker-compose-dev.yml up -d
+            sudo docker compose -f docker-compose-dev.yml up -d
+            sudo docker image prune -f

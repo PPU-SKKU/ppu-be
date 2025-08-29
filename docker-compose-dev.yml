@@ -5,8 +5,6 @@ services:
     image: yaongmeow/ppu-docker:latest
     pull_policy: always
     container_name: ppu-container
-    volumes:
-      - /home/ubuntu/static:/app/static
     ports:
       - "8080:8080"
     restart: always

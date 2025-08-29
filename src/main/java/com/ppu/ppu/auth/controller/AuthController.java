@@ -36,18 +36,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.loginPw(user));
     }
 
-//    @GetMapping("/login/kakao")
-//    public ResponseEntity<Void> kakaoLogin() {
-//        String uri = oAuthService.getKakaoLoginAuthorizeUrl();
-//        return ResponseEntity.status(302)
-//                .location(URI.create(uri))
-//                .build();
-//    }
+    @GetMapping("/login/kakao")
+    public ResponseEntity<Void> kakaoLogin() {
+        String uri = oAuthService.getKakaoLoginAuthorizeUrl();
+        return ResponseEntity.status(302)
+                .location(URI.create(uri))
+                .build();
+    }
 
-//    @GetMapping("/login/kakao/callback")
-//    public ResponseEntity<UserLoginResponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
-//        return ResponseEntity.ok(oAuthService.kakaoLogin(dto));
-//    }
+    @GetMapping("/login/kakao/callback")
+    public ResponseEntity<UserLoginResponseDto> kakaoLoginCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
+        return ResponseEntity.ok(oAuthService.kakaoLogin(dto));
+    }
 
     @PostMapping("/refresh")
     public ResponseEntity<UserRefreshResponseDto> refresh(@Valid @RequestBody UserRefreshDto dto) {
@@ -59,9 +59,9 @@ public class AuthController {
         return withdrawService.withdrawPreHandler(request);
     }
 
-//    @GetMapping("/withdraw/kakao/callback")
-//    public ResponseEntity<Void> kakaoWithdrawCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
-//        withdrawService.withdrawKakao(dto);
-//        return ResponseEntity.noContent().build();
-//    }
+    @GetMapping("/withdraw/kakao/callback")
+    public ResponseEntity<Void> kakaoWithdrawCallback(@Valid @ModelAttribute KakaoUserAuthorizeCodeDto dto) {
+        withdrawService.withdrawKakao(dto);
+        return ResponseEntity.noContent().build();
+    }
 }

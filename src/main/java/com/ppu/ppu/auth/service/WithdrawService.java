@@ -32,19 +32,19 @@ public class WithdrawService {
                 userService.deleteUser(userId);
                 yield ResponseEntity.noContent().build();
             }
-//            case KAKAO -> ResponseEntity.status(HttpStatus.FOUND)
-//                    .location(URI.create(oAuthService.getKakaoWithdrawAuthorizeUrl()))
-//                    .build();
+            case KAKAO -> ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(oAuthService.getKakaoWithdrawAuthorizeUrl()))
+                    .build();
             default -> throw new AuthException(ErrorCode.AUTH_INVALID_TOKEN);
         };
     }
 
-//    public void withdrawKakao(KakaoUserAuthorizeCodeDto dto) {
-//        UserOauthDto oauthDto = oAuthService.kakaoWithdraw(dto);
-//        User user = userService.getUserByEmailAndLoginType(oauthDto.getEmail(), oauthDto.getLoginType())
-//                .orElseThrow(() -> new AuthException(ErrorCode.AUTH_INVALID_TOKEN));
-//
-//        UUID userId = user.getId();
-//        userService.deleteUser(userId);
-//    }
+    public void withdrawKakao(KakaoUserAuthorizeCodeDto dto) {
+        UserOauthDto oauthDto = oAuthService.kakaoWithdraw(dto);
+        User user = userService.getUserByEmailAndLoginType(oauthDto.getEmail(), oauthDto.getLoginType())
+                .orElseThrow(() -> new AuthException(ErrorCode.AUTH_INVALID_TOKEN));
+
+        UUID userId = user.getId();
+        userService.deleteUser(userId);
+    }
 }
