@@ -6,11 +6,19 @@ services:
       context: .
       dockerfile: local.Dockerfile
     image: ppu-app-local:latest
-    volumes:
-      - ./src:/app/src
     container_name: ppu-container
     ports:
       - "8080:8080"
+    # 핫 리로드 용도
+    volumes:
+      - .:/app
+      - ~/.gradle:/root/.gradle
     restart: always
     env_file:
       - ./.env
+    # 핫 리로드 용도
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -Dspring.devtools.restart.enabled=true
+        -Dspring.devtools.restart.poll-interval=1s
+        -Dspring.devtools.restart.quiet-period=500ms

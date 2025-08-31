@@ -1,5 +1,6 @@
 # 1. build stage
-FROM eclipse-temurin:17-jdk-jammy AS builder
+#FROM eclipse-temurin:17-jdk-jammy AS builder
+FROM openjdk:17-jdk-slim AS builder
 
 WORKDIR /app
 
@@ -21,7 +22,8 @@ COPY . .
 RUN ./gradlew --no-daemon clean build -x test
 
 # 2. run stage
-FROM eclipse-temurin:17-jre-jammy AS runner
+#FROM eclipse-temurin:17-jre-jammy AS runner
+FROM openjdk:17-jdk-slim AS runner
 
 WORKDIR /app
 

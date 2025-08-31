@@ -1,17 +1,11 @@
-# 1. Build Stage
-FROM gradle:8.2.0-jdk17 AS builder
+FROM openjdk:17-jdk-slim AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY gradlew gradlew.bat settings.gradle build.gradle ./
 
-RUN rm -rf ~/.gradle/caches && ./gradlew clean build --no-build-cache --refresh-dependencies
+COPY gradle gradle
 
-# 2. Run Stage
-FROM openjdk:17-jdk-slim
+RUN ./gradlew --no-daemon -q dependencies
 
-WORKDIR /app
-
-COPY --from=builder /app/build/libs/*.jar app.jar
-
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./gradlew","--no-daemon","bootRun"]
