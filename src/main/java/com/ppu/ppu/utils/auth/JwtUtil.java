@@ -1,4 +1,4 @@
-package com.ppu.ppu.utils;
+package com.ppu.ppu.utils.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
