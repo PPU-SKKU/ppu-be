@@ -27,6 +27,11 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getAllReviewsByPerfumeId(perfumeId));
     }
 
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> getReviewById(@Parameter(description = "시향기 ID", required = true) @PathVariable("reviewId") UUID reviewId) {
+        return ResponseEntity.ok(reviewService.getReviewById(reviewId));
+    }
+
     @GetMapping("/my")
     public ResponseEntity<List<ReviewResponseDto>> getMyReviews(HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
