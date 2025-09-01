@@ -59,6 +59,6 @@ tasks.named('bootRun') {
 	sourceResources(sourceSets.main)
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs += ["-parameters"]
 }
