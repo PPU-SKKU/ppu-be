@@ -5,6 +5,7 @@ import com.ppu.ppu.review.dto.ReviewCreateDto;
 import com.ppu.ppu.review.dto.ReviewResponseDto;
 import com.ppu.ppu.review.dto.ReviewUpdateDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,13 +41,21 @@ public class ReviewService {
                 .toList();
     }
 
+    @Transactional
     public void createReview(ReviewCreateDto reviewCreateDto) {
         Review review = ReviewCreateDto.fromDto(reviewCreateDto);
         reviewRepository.save(review);
     }
 
-    public void updateReview(ReviewUpdateDto reviewUpdateDto) {
-        //TODO: update 작성
+    @Transactional
+    public void updateReview(UUID reviewId, ReviewUpdateDto reviewUpdateDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("No such review"));
+        review.setLiked(reviewUpdateDto.isLiked());
+        review.setScore(reviewUpdateDto.getScore());
+        review.setWearTested(reviewUpdateDto.isWearTested());
+        review.setTestedDate(reviewUpdateDto.getTestedDate());
+        review.setContent(reviewUpdateDto.getContent());
     }
 
     public void deleteReview(List<UUID> reviewIds) {

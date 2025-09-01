@@ -2,9 +2,7 @@ package com.ppu.ppu.review.domain;
 
 import com.ppu.ppu.perfume.domain.Perfume;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,9 +15,11 @@ import java.util.UUID;
 @Entity
 @Table(name="review")
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private UUID id;
 
@@ -28,7 +28,7 @@ public class Review {
     private Perfume perfume;
 
     @Column(name = "user_id")
-    private int userId;
+    private UUID userId;
 
     @Column(name = "is_liked")
     private boolean isLiked;

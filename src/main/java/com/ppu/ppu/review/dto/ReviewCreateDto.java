@@ -1,5 +1,6 @@
 package com.ppu.ppu.review.dto;
 
+import com.ppu.ppu.perfume.domain.Perfume;
 import com.ppu.ppu.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ReviewCreateDto {
+    @Setter
     UUID userId;
     Integer perfumeId;
     boolean isLiked;
@@ -32,7 +34,16 @@ public class ReviewCreateDto {
     }
 
     public static Review fromDto(ReviewCreateDto dto) {
-        Review review = new Review();
+        Review review = new Review().builder().
+                userId(dto.getUserId()).
+                perfume(new Perfume(dto.getPerfumeId())).
+                isLiked(dto.isLiked()).
+                score(dto.getScore()).
+                wearTested(dto.isWearTested()).
+                testedDate(dto.getTestedDate()).
+                content(dto.getContent()).
+                build();
         return review;
     }
+
 }
