@@ -28,4 +28,11 @@ public class Perfume {
 
     @Column(name = "image")
     private String image;
+
+    public Perfume() {
+    }
+
+    public Perfume(int id) {
+        this.id = id;
+    }
 }
