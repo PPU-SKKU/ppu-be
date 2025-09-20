@@ -66,7 +66,7 @@ public class ImageService {
     }
 
     @Transactional
-    public UUID replaceOwnerImage(UUID ownerId, UUID imageId, MultipartFile file) {
+    public void replaceOwnerImage(UUID ownerId, UUID imageId, MultipartFile file) {
         ImageEntity imageDb = imageRepository.findById(imageId)
                 .orElseThrow(() -> new ImageException(ErrorCode.IMAGE_EMPTY_COLUMN));
 
@@ -108,8 +108,6 @@ public class ImageService {
                 s3Storage.deleteObject(bucket, oldObjectKey);
             }
         });
-
-        return imageDb.getId();
     }
 
     @Transactional
