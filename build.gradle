@@ -47,7 +47,6 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools' // 핫 리로드 용도
 	implementation platform('software.amazon.awssdk:bom:2.29.32')
 	implementation 'software.amazon.awssdk:s3'
-//	implementation 'software.amazon.awssdk:auth'
 }
 
 tasks.named('test') {
