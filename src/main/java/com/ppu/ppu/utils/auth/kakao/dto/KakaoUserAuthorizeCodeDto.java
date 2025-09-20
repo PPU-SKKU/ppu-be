@@ -1,4 +1,4 @@
-package com.ppu.ppu.utils.kakao.dto;
+package com.ppu.ppu.utils.auth.kakao.dto;
 
 import lombok.Data;
 

@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Modifying
     @Query("UPDATE User u SET u.profileImage = :profileImage WHERE u.id = :id")
-    int updateProfileImageById(@Param("id") UUID id, @Param("profileImage") String filePath);
+    int updateProfileImageById(@Param("id") UUID id, @Param("profileImage") UUID filePath);
 
     @Modifying
     @Query("DELETE from User u WHERE u.id = :id")

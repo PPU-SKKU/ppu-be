@@ -45,6 +45,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // test invalid api dto
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11' // swagger
 	developmentOnly 'org.springframework.boot:spring-boot-devtools' // 핫 리로드 용도
+	implementation platform('software.amazon.awssdk:bom:2.29.32')
+	implementation 'software.amazon.awssdk:s3'
 }
 
 tasks.named('test') {

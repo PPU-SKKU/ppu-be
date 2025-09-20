@@ -12,7 +12,7 @@ services:
     # 핫 리로드 용도
     volumes:
       - .:/app
-      - ~/.gradle:/root/.gradle
+      - gradle-cache:/root/.gradle
     restart: always
     env_file:
       - ./.env
@@ -22,3 +22,6 @@ services:
         -Dspring.devtools.restart.enabled=true
         -Dspring.devtools.restart.poll-interval=1s
         -Dspring.devtools.restart.quiet-period=500ms
+
+volumes:
+  gradle-cache: {}
