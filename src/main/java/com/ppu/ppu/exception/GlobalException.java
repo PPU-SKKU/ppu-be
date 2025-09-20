@@ -1,9 +1,7 @@
 package com.ppu.ppu.exception;
 
 import com.ppu.ppu.exception.domain.AuthException;
-import com.ppu.ppu.exception.domain.ImageException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,16 +29,6 @@ public class GlobalException extends RuntimeException {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(ErrorCode.INVALID_INPUT, errors));
-    }
-
-    @ExceptionHandler(ImageException.class)
-    public ResponseEntity<ErrorResponse> handleImage(ImageException ex) {
-        ErrorCode code = ex.getErrorCode();
-        ErrorResponse body = ErrorResponse.of(code);
-        return ResponseEntity
-                .status(code.getStatus())
-                .contentType(MediaType.APPLICATION_JSON)   // ★ 에러는 항상 JSON
-                .body(body);
     }
 
     @ExceptionHandler(Exception.class)
