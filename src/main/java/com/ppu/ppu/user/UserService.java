@@ -2,8 +2,12 @@ package com.ppu.ppu.user;
 
 
 import com.ppu.ppu.auth.dto.UserCreateDto;
+import com.ppu.ppu.exception.ErrorCode;
+import com.ppu.ppu.exception.domain.UserException;
+import com.ppu.ppu.utils.image.ImageService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -51,15 +55,5 @@ public class UserService {
 
     public Optional<User> findUserById(UUID id){
         return userRepository.findById(id);
-    }
-
-    @Transactional
-    public int updateNicknameById(UUID id, String newNickname) {
-        return userRepository.updateNicknameById(id, newNickname);
-    }
-
-    @Transactional
-    public int updateProfileImageById(UUID id, String newProfile) {
-        return userRepository.updateProfileImageById(id, newProfile);
     }
 }

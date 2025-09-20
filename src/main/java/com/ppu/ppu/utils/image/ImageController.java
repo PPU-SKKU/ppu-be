@@ -13,7 +13,7 @@ import java.util.UUID;
 @Tag(name = "Image", description = "Image S3 API (Test only)")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/image")
+@RequestMapping("/images")
 public class ImageController {
     private final ImageService imageService;
 

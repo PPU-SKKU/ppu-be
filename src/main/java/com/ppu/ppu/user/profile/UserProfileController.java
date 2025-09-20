@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin("*")
@@ -20,36 +19,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserProfileController {
     private final UserService userService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDto> havePerfume(HttpServletRequest request) {
+    public ResponseEntity<UserProfileGetDto> getUserProfile(HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
 
-        Optional<User> user = userService.findUserById(userId);
-
-        if(!user.isPresent()) {
-            throw new UserException(ErrorCode.USER_LOAD_FAILED);
-        }
-
-        return ResponseEntity.ok(new UserProfileDto(user.get().getProfileImage(), user.get().getNickname()));
+        return ResponseEntity.ok(userProfileService.getUserProfile(userId));
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<Void> havePerfume(@RequestBody UserProfileDto dto, HttpServletRequest request) {
+    public ResponseEntity<Void> updateUserProfile(@ModelAttribute UserProfileUpdateDto dto, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        Optional<User> user = userService.findUserById(userId);
+        User user = userService.findUserById(userId).orElseThrow(() -> new UserException(ErrorCode.USER_LOAD_FAILED));
 
-        if(!user.isPresent()) {
-            throw new UserException(ErrorCode.USER_LOAD_FAILED);
-        }
-
-        System.out.println(dto.getNickname());
-        System.out.println(dto.getProfileImage());
         if(dto.getProfileImage() != null)
-            userService.updateProfileImageById(userId, dto.getProfileImage());
+            userProfileService.updateProfileImageById(userId, dto.getProfileImage());
 
         if(dto.getNickname() != null)
-            userService.updateNicknameById(userId, dto.getNickname());
+            userProfileService.updateNicknameById(userId, dto.getNickname());
 
         return ResponseEntity.ok().build();
     }

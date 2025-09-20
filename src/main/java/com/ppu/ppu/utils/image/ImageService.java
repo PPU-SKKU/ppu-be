@@ -51,7 +51,6 @@ public class ImageService {
                     .height(image.getSize().height)
                     .build();
             imageRepository.save(img);
-            System.out.println("Image uploaded. Bucket: " + bucket + "Key: " + image.getObjectKey());
             return img.getId();
 
         } catch (Exception e) {
@@ -77,7 +76,6 @@ public class ImageService {
         // 2. Upload new image to S3
         String bucket = imageDb.getBucket();
         String oldObjectKey = imageDb.getObjectKey();
-        System.out.println("Image replace started. Bucket: " + bucket + "Old Key: " + oldObjectKey);
 
         ImageUploadResultDto newImage =
                 s3Storage.putObject(bucket,
@@ -111,8 +109,6 @@ public class ImageService {
             }
         });
 
-        System.out.println("Image replaced. Bucket: " + bucket + "Key: " + newImage.getObjectKey());
-
         return imageDb.getId();
     }
 
@@ -132,7 +128,6 @@ public class ImageService {
                 s3Storage.deleteObject(bucket, objectKey);
             }
         });
-        System.out.println("Image deleted. Bucket: " + bucket + "Key: " + objectKey);
     }
 
     @Transactional
