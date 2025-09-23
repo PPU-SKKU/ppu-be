@@ -1,5 +1,6 @@
-package com.ppu.ppu.oppu;
+package com.ppu.ppu.oppu.domain;
 
+import com.ppu.ppu.oppu.OppuPerfumes;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

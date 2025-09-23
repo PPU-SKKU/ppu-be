@@ -1,9 +1,10 @@
 package com.ppu.ppu.oppu;
 
+import com.ppu.ppu.oppu.dto.OppuGetArticleDto;
+import com.ppu.ppu.oppu.dto.OppuPostArticleDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

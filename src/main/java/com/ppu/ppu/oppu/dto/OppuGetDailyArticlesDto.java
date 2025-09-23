@@ -1,5 +1,6 @@
-package com.ppu.ppu.oppu;
+package com.ppu.ppu.oppu.dto;
 
+import com.ppu.ppu.oppu.OppuPerfumes;
 import lombok.*;
 
 import java.net.URI;

@@ -1,5 +1,7 @@
-package com.ppu.ppu.oppu;
+package com.ppu.ppu.oppu.dto;
 
+import com.ppu.ppu.oppu.OppuPerfumes;
+import com.ppu.ppu.oppu.domain.Oppu;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
