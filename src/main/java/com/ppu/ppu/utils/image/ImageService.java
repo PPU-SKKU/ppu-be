@@ -6,15 +6,14 @@ import com.ppu.ppu.exception.domain.ImageException;
 import com.ppu.ppu.utils.image.s3.S3Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -37,35 +36,51 @@ public class ImageService {
                 .collect(Collectors.toList());
     }
 
-    public UUID uploadImage(UUID ownerId, String bucket, String dirName, MultipartFile file) {
-        ImageUploadResultDto image = s3Storage.putObject(bucket, dirName, file);
+    public List<UUID> toList(UUID imageId) {
+        return Stream.ofNullable(imageId).toList();
+    }
 
+    public List<MultipartFile> toList(MultipartFile file) {
+        return Stream.ofNullable(file).toList();
+    }
+
+    public List<UUID> uploadImages(UUID ownerId, String bucket, String dirName, List<MultipartFile> files) {
+        if(files == null || files.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<String> objectKeys = new ArrayList<>();
+        List<UUID> imageIds = new ArrayList<>();
         try {
-            ImageEntity img = ImageEntity.builder()
-                    .ownerId(ownerId)
-                    .bucket(bucket)
-                    .objectKey(image.getObjectKey())
-                    .contentType(image.getContentType())
-                    .status(ImageUploadStatus.READY)
-                    .width(image.getSize().width)
-                    .height(image.getSize().height)
-                    .build();
-            imageRepository.save(img);
-            return img.getId();
+            for(MultipartFile file : files) {
+                ImageUploadResultDto image = s3Storage.putObject(bucket, dirName, file);
+                objectKeys.add(image.getObjectKey());
 
+                ImageEntity img = ImageEntity.builder()
+                        .ownerId(ownerId)
+                        .bucket(bucket)
+                        .objectKey(image.getObjectKey())
+                        .contentType(image.getContentType())
+                        .status(ImageUploadStatus.READY)
+                        .width(image.getSize().width)
+                        .height(image.getSize().height)
+                        .build();
+                imageRepository.save(img);
+                imageIds.add(img.getId());
+            }
+
+            return imageIds;
         } catch (Exception e) {
-            s3Storage.deleteObject(bucket, image.getObjectKey());
+            for(String objectKey : objectKeys) {
+                try {
+                    s3Storage.deleteObject(bucket, objectKey);
+                } catch (Exception ignore) {}
+            }
             throw new ImageException(ErrorCode.IMAGE_UPLOAD_FAILED);
         }
     }
 
-    public List<UUID> uploadImages(UUID ownerId, String bucket, String dirName, List<MultipartFile> files) {
-        return files.stream()
-                .map(file -> uploadImage(ownerId, bucket, dirName, file))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
+    /*@Transactional
     public void replaceOwnerImage(UUID ownerId, UUID imageId, MultipartFile file) {
         ImageEntity imageDb = imageRepository.findById(imageId)
                 .orElseThrow(() -> new ImageException(ErrorCode.IMAGE_EMPTY_COLUMN));
@@ -105,15 +120,41 @@ public class ImageService {
         // 4. After db is linking new image, remove old image in s3
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override public void afterCommit() {
-                s3Storage.deleteObject(bucket, oldObjectKey);
+                try {
+                    s3Storage.deleteObject(bucket, oldObjectKey);
+                } catch (Exception ignore) {}
             }
         });
     }
 
     @Transactional
+    public List<UUID> replaceOwnerImages(UUID ownerId, String bucket, String dirName, List<UUID> oldImageIds, List<MultipartFile> newImages) {
+        if (newImages == null) newImages = Collections.emptyList();
+        if (oldImageIds == null) oldImageIds = Collections.emptyList();
+
+        for(UUID imageId : oldImageIds) {
+            checkIsAuthorizedUser(ownerId, imageId);
+        }
+
+        List<UUID> imageIds = uploadImages(ownerId, bucket, dirName, newImages);
+        try {
+            deleteOwnerImages(ownerId, oldImageIds);
+        } catch (Exception e) {
+            deleteOwnerImages(ownerId, imageIds);
+        }
+
+        return imageIds;
+    }
+
+    @Transactional
     public void deleteOwnerImage(UUID ownerId, UUID imageId) {
         ImageEntity imageDb = imageRepository.findById(imageId)
-                .orElseThrow(() -> new ImageException(ErrorCode.IMAGE_EMPTY_COLUMN));
+                        .orElse(null);
+
+        if(imageDb == null) {
+            System.out.printf("Delete image failed. No Such keys: %s\n", imageId);
+            return;
+        }
 
         checkIsAuthorizedUser(ownerId, imageDb.getOwnerId());
 
@@ -123,19 +164,66 @@ public class ImageService {
         imageRepository.delete(imageDb);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override public void afterCommit() {
-                s3Storage.deleteObject(bucket, objectKey);
+                try {
+                    s3Storage.deleteObject(bucket, objectKey);
+                } catch (Exception ignore) {
+                    System.out.printf("Delete image on S3 failed. imageId: %s, bucket: %s, objectKey: %s\n", imageId, bucket, objectKey);
+                }
             }
         });
     }
 
     @Transactional
     public void deleteOwnerImages(UUID ownerId, List<UUID> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) return;
         imageIds.forEach(imageId -> deleteOwnerImage(ownerId, imageId));
+    }*/
+
+    public void deleteObjectsAfterCommit(List<UUID> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) return;
+
+        List<ImageEntity> entities = imageRepository.findAllById(imageIds);
+        if (entities.isEmpty()) return;
+
+        Map<String, List<String>> bucketToKeys = entities.stream()
+                .collect(Collectors.groupingBy(ImageEntity::getBucket,
+                        Collectors.mapping(ImageEntity::getObjectKey, Collectors.toList())));
+
+        imageRepository.deleteAllInBatch(entities);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCommit() {
+                bucketToKeys.forEach((bucket, keys) -> keys.forEach(key -> s3Storage.deleteObject(bucket, key)));
+            }
+        });
+    }
+
+    public void deleteObjectsOnRollback(List<UUID> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) return;
+
+        List<ImageEntity> entities = imageRepository.findAllById(imageIds);
+        if (entities.isEmpty()) return;
+
+        Map<String, List<String>> bucketToKeys = entities.stream()
+                .collect(Collectors.groupingBy(ImageEntity::getBucket,
+                        Collectors.mapping(ImageEntity::getObjectKey, Collectors.toList())));
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCompletion(int status) {
+                if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+                    System.out.println("Delete Rollback accessed");
+                    bucketToKeys.forEach((bucket, keys) -> keys.forEach(key -> s3Storage.deleteObject(bucket, key)));
+                }
+            }
+        });
     }
 
     private void checkIsAuthorizedUser(UUID ownerId, UUID imgOwnerId) {
         if(imgOwnerId == null || !imgOwnerId.equals(ownerId)) {
             throw new ImageException(ErrorCode.IMAGE_UNAUTHORIZED);
         }
+    }
+
+    private void validateObject() {
+
     }
 }

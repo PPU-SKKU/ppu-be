@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,13 +44,14 @@ public class UserProfileService {
         User user = userService.findUserById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_LOAD_FAILED));
 
-        UUID profileImage = user.getProfileImage();
-        if(profileImage != null) {
-            imageService.replaceOwnerImage(id, profileImage, newProfile);
-        }
-        else {
-            UUID imageId = imageService.uploadImage(id, "ppubucket", "profile", newProfile);
-            userRepository.updateProfileImageById(id, imageId);
-        }
+        if(newProfile == null || newProfile.isEmpty()) return;
+
+        List<UUID> imageUUID = imageService.uploadImages(id, "ppubucket", "oppu", imageService.toList(newProfile));
+        List<UUID> oldImageUUID = imageService.toList(user.getProfileImage());
+
+        imageService.deleteObjectsAfterCommit(oldImageUUID);
+        imageService.deleteObjectsOnRollback(imageUUID);
+
+        userRepository.updateProfileImageById(id, imageUUID.get(0));
     }
 }

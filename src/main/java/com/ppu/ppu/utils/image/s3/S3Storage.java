@@ -107,6 +107,10 @@ public class S3Storage {
 
     private void validateFile(MultipartFile file) {
         String contentType = file.getContentType();
+        if(file.isEmpty()) {
+            throw new ImageException(ErrorCode.IMAGE_INVALID_FILE_TYPE);
+        }
+
         if(!Objects.requireNonNull(contentType).startsWith("image/")) {
             throw new ImageException(ErrorCode.IMAGE_INVALID_FILE_TYPE);
         }

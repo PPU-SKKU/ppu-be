@@ -2,7 +2,7 @@ package com.ppu.ppu.oppu;
 
 import lombok.*;
 
-import java.net.URI;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,19 @@ import java.util.UUID;
 public class OppuGetArticleDto {
     private LocalDate date;
     private List<OppuPerfumes> perfumeIds;
-    private List<URI> images;
+    private List<URL> images;
     private List<UUID> tags;
     private String comment;
+    private boolean feedback;
+
+    public static OppuGetArticleDto fromEntity(Oppu oppu, List<URL> imageUrls) {
+        return OppuGetArticleDto.builder()
+                .date(oppu.getDate())
+                .perfumeIds(oppu.getPerfumes())
+                .images(imageUrls)
+                .tags(oppu.getTags())
+                .comment(oppu.getComment())
+                .feedback(oppu.isFeedback())
+                .build();
+    }
 }

@@ -36,6 +36,11 @@ public enum ErrorCode {
     IMAGE_INVALID_OBJECT_KEY(HttpStatus.BAD_REQUEST, "object key is invalid format"),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "image not found on s3 with access key"),
     IMAGE_DOWNLOAD_FAILED(HttpStatus.BAD_REQUEST, "image download failed by some error"),
+
+    // Oppu
+    OPPU_POST_FAILED(HttpStatus.BAD_REQUEST, "post operation failed"),
+    OPPU_NO_ARTICLE(HttpStatus.BAD_REQUEST, "no article with oppu Id"),
+    OPPU_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized"),
     ;
 
     private final HttpStatus status;

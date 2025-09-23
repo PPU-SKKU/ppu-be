@@ -1,49 +1,67 @@
 package com.ppu.ppu.oppu;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin("*")
 @Tag(name = "oppu", description = "오뿌 API")
 @RestController
 @RequestMapping("/oppu")
+@AllArgsConstructor
 public class OppuController {
-    OppuRepository oppuRepository;
-    OppuService oppuService;
+    private final OppuService oppuService;
 
-    @PostMapping("")
-    public ResponseEntity<Void> postDailyRecord(@Valid @RequestBody OppuPostArticleDto post, HttpServletRequest request) {
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> postArticle(
+            @Valid @RequestPart("post") OppuPostArticleDto post,
+            @RequestPart(name = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        oppuService.postArticle(userId, post);
+        oppuService.postArticle(userId, post, images);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{oppu}")
-    public ResponseEntity<OppuGetArticleDto> getDailyRecord(@PathVariable UUID oppu, HttpServletRequest request) {
+    @GetMapping("/{id}")
+    public ResponseEntity<OppuGetArticleDto> getArticle(
+            @PathVariable("id") UUID id,
+            HttpServletRequest request)
+    {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        return ResponseEntity.ok(oppuService.getArticle(userId, oppu));
+        return ResponseEntity.ok(oppuService.getArticle(userId, id));
     }
 
-    @PutMapping("/{oppu}")
-    public ResponseEntity<Void> putDailyRecord(@PathVariable("oppu") UUID oppu, @Valid @RequestBody OppuPostArticleDto post, HttpServletRequest request) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> putArticle(
+            @PathVariable("id") UUID id,
+            @Valid @RequestPart("post") OppuPostArticleDto post,
+            @RequestPart(name = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest request) throws ServletException, IOException {
+
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        oppuService.putArticle(userId, oppu, post);
+        oppuService.putArticle(userId, id, post, images);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{oppu}")
-    public ResponseEntity<Void> deleteDailyRecord(@PathVariable UUID oppu, HttpServletRequest request) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable("id") UUID id, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        oppuService.deleteArticle(userId, oppu);
+        oppuService.deleteArticle(userId, id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/daily")
+    /*@GetMapping("/daily")
     public ResponseEntity<> getDailyRecords(@RequestParam int date, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         return ResponseEntity.ok(oppuService.getDailyArticles(userId, date));
@@ -53,7 +71,7 @@ public class OppuController {
     public ResponseEntity<> getMonthlyRecords(@RequestParam int date, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         return ResponseEntity.ok(oppuService.getMonthlyTags(userId, date));
-    }
+    }*/
 
 
 }
