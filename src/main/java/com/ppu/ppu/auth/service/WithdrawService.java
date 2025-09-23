@@ -5,7 +5,7 @@ import com.ppu.ppu.exception.ErrorCode;
 import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.UserService;
 import com.ppu.ppu.user.User;
-import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
+import com.ppu.ppu.utils.auth.kakao.dto.KakaoUserAuthorizeCodeDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

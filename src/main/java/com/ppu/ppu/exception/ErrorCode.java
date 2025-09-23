@@ -25,6 +25,17 @@ public enum ErrorCode {
     // User
     USER_LOAD_FAILED(HttpStatus.BAD_REQUEST, "user load failed"),
 
+    // Image
+    IMAGE_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "invalid image type"),
+    IMAGE_FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "image size exceeded"),
+    IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "image upload failed"),
+    IMAGE_BLANK_OBJECT_KEY(HttpStatus.BAD_REQUEST, "object key is blank"),
+    IMAGE_EMPTY_COLUMN(HttpStatus.BAD_REQUEST, "accessing empty Image"),
+    IMAGE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "replacing/deleting image who is not owner"),
+    IMAGE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "image deletion failed as internal error"),
+    IMAGE_INVALID_OBJECT_KEY(HttpStatus.BAD_REQUEST, "object key is invalid format"),
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "image not found on s3 with access key"),
+    IMAGE_DOWNLOAD_FAILED(HttpStatus.BAD_REQUEST, "image download failed by some error"),
     ;
 
     private final HttpStatus status;

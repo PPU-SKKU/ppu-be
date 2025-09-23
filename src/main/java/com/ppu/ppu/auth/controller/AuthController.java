@@ -5,7 +5,7 @@ import com.ppu.ppu.auth.dto.*;
 import com.ppu.ppu.auth.service.AuthService;
 import com.ppu.ppu.auth.service.OAuthService;
 import com.ppu.ppu.auth.service.WithdrawService;
-import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
+import com.ppu.ppu.utils.auth.kakao.dto.KakaoUserAuthorizeCodeDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

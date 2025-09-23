@@ -1,4 +1,4 @@
-package com.ppu.ppu.utils;
+package com.ppu.ppu.utils.auth;
 
 import com.ppu.ppu.auth.dto.UserLoginResponseDto;
 import com.ppu.ppu.auth.dto.UserRefreshResponseDto;
