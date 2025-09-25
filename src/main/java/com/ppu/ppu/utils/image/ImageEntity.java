@@ -19,7 +19,7 @@ public class ImageEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "owner_id", nullable = false)
+    @Column(name = "owner_id")
     private UUID ownerId;
 
     @Column(name = "bucket", nullable = false, length = 255)

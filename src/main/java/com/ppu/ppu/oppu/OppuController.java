@@ -1,18 +1,20 @@
 package com.ppu.ppu.oppu;
 
-import com.ppu.ppu.oppu.dto.OppuGetArticleDto;
-import com.ppu.ppu.oppu.dto.OppuPostArticleDto;
+import com.ppu.ppu.oppu.dto.OppuDailyResponseDto;
+import com.ppu.ppu.oppu.dto.OppuResponseDto;
+import com.ppu.ppu.oppu.dto.OppuMonthlyResponseDto;
+import com.ppu.ppu.oppu.dto.OppuCreateDto;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class OppuController {
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> postArticle(
-            @Valid @RequestPart("post") OppuPostArticleDto post,
+            @Valid @RequestPart("post") OppuCreateDto post,
             @RequestPart(name = "images", required = false) List<MultipartFile> images,
             HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
@@ -35,8 +37,8 @@ public class OppuController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OppuGetArticleDto> getArticle(
-            @PathVariable("id") UUID id,
+    public ResponseEntity<OppuResponseDto> getArticle(
+            @Parameter(description = "article ID", required = true) @PathVariable("id") UUID id,
             HttpServletRequest request)
     {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
@@ -45,10 +47,10 @@ public class OppuController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> putArticle(
-            @PathVariable("id") UUID id,
-            @Valid @RequestPart("post") OppuPostArticleDto post,
+            @Parameter(description = "article ID", required = true) @PathVariable("id") UUID id,
+            @Valid @RequestPart("post") OppuCreateDto post,
             @RequestPart(name = "images", required = false) List<MultipartFile> images,
-            HttpServletRequest request) throws ServletException, IOException {
+            HttpServletRequest request) {
 
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         oppuService.putArticle(userId, id, post, images);
@@ -56,23 +58,29 @@ public class OppuController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable("id") UUID id, HttpServletRequest request) {
+    public ResponseEntity<Void> deleteArticle(@Parameter(description = "article ID", required = true) @PathVariable("id") UUID id, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         oppuService.deleteArticle(userId, id);
         return ResponseEntity.noContent().build();
     }
 
-    /*@GetMapping("/daily")
-    public ResponseEntity<> getDailyRecords(@RequestParam int date, HttpServletRequest request) {
+    @GetMapping("/daily")
+    public ResponseEntity<OppuDailyResponseDto> getDailyRecords(
+            @RequestParam(name = "date", required = true)
+            @Pattern(regexp = "^(\\d{4})(0[1-9]|1[0-2])(\\d{2})$", message = "pattern should be YYYYMMDD(ex. 20250903)")
+            String date, HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         return ResponseEntity.ok(oppuService.getDailyArticles(userId, date));
     }
 
     @GetMapping("/month")
-    public ResponseEntity<> getMonthlyRecords(@RequestParam int date, HttpServletRequest request) {
+    public ResponseEntity<OppuMonthlyResponseDto> getMonthlyRecords(
+            @RequestParam(name = "month", required = true)
+            @Pattern(regexp = "^(\\d{4})(0[1-9]|1[0-2])$", message = "pattern should be YYYYMM(ex. 202509)")
+            String date,
+
+            HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
         return ResponseEntity.ok(oppuService.getMonthlyTags(userId, date));
-    }*/
-
-
+    }
 }

@@ -14,24 +14,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OppuPostArticleDto {
+public class OppuCreateDto {
     @NotNull
     private LocalDate date;
 
     @NotNull
     private List<OppuPerfumes> perfumeIds;
 
-    private List<UUID> tags;
+    private List<UUID> tagIds;
     private String comment;
     private boolean feedback;
 
-    public static Oppu fromDto(UUID userId, List<UUID> images, OppuPostArticleDto dto) {
+    public static Oppu fromDto(UUID userId, List<UUID> images, OppuCreateDto dto) {
         return Oppu.builder()
                 .userId(userId)
                 .date(dto.getDate())
                 .perfumes(dto.getPerfumeIds())
                 .images(images)
-                .tags(dto.getTags())
+                .tags(dto.getTagIds())
                 .comment(dto.getComment())
                 .feedback(dto.isFeedback())
                 .build();

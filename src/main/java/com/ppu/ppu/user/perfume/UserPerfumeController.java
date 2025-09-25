@@ -24,7 +24,7 @@ public class UserPerfumeController {
     @GetMapping("/wish")
     public ResponseEntity<UserPerfumeDto> getWish(HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        List<UUID> perfumeIds = userPerfumeWishService
+        List<Integer> perfumeIds = userPerfumeWishService
                 .findPerfumeIdsByUserId(userId)
                 .orElse(Collections.emptyList());
 
@@ -50,7 +50,7 @@ public class UserPerfumeController {
     @GetMapping("/have")
     public ResponseEntity<UserPerfumeDto> getHave(HttpServletRequest request) {
         UUID userId = UUID.fromString((String) request.getAttribute("id"));
-        List<UUID> perfumeIds = userPerfumeHaveService
+        List<Integer> perfumeIds = userPerfumeHaveService
                 .findPerfumeIdsByUserId(userId)
                 .orElse(Collections.emptyList());
 

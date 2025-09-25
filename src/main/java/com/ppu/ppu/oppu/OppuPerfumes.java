@@ -1,7 +1,5 @@
 package com.ppu.ppu.oppu;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import lombok.*;
 
 @Getter

@@ -14,20 +14,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OppuGetArticleDto {
+public class OppuResponseDto {
+    private UUID id;
+    private UUID userId;
     private LocalDate date;
-    private List<OppuPerfumes> perfumeIds;
-    private List<URL> images;
-    private List<UUID> tags;
+    private List<OppuPerfumes> perfume;
+    private List<URL> image;
+    private List<UUID> tagId;
     private String comment;
     private boolean feedback;
 
-    public static OppuGetArticleDto fromEntity(Oppu oppu, List<URL> imageUrls) {
-        return OppuGetArticleDto.builder()
+    public static OppuResponseDto fromEntity(Oppu oppu, List<URL> imageUrls) {
+        return OppuResponseDto.builder()
+                .id(oppu.getId())
+                .userId(oppu.getUserId())
                 .date(oppu.getDate())
-                .perfumeIds(oppu.getPerfumes())
-                .images(imageUrls)
-                .tags(oppu.getTags())
+                .perfume(oppu.getPerfumes())
+                .image(imageUrls)
+                .tagId(oppu.getTags())
                 .comment(oppu.getComment())
                 .feedback(oppu.isFeedback())
                 .build();

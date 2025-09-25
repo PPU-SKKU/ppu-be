@@ -41,6 +41,14 @@ public enum ErrorCode {
     OPPU_POST_FAILED(HttpStatus.BAD_REQUEST, "post operation failed"),
     OPPU_NO_ARTICLE(HttpStatus.BAD_REQUEST, "no article with oppu Id"),
     OPPU_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized"),
+    OPPU_TAG_MAX_LIMIT(HttpStatus.BAD_REQUEST, "tag limit exceeded: 5"),
+    OPPU_TAG_NOT_FIND(HttpStatus.BAD_REQUEST, "tag not found with id"),
+    OPPU_TAG_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized"),
+    OPPU_NO_PERFUMES(HttpStatus.BAD_REQUEST, "no(null) perfumes with oppu Id"),
+    OPPU_PERFUME_COUNT_LEQ_ZERO(HttpStatus.BAD_REQUEST, "perfume count leq zero"),
+    OPPU_NO_TAGS(HttpStatus.BAD_REQUEST, "no(null) tags with oppu Id"),
+    OPPU_INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "invalid date format: should be yyyyMMdd"),
+    OPPU_INVALID_MONTH_FORMAT(HttpStatus.BAD_REQUEST, "invalid month format: should be yyyyMM"),
     ;
 
     private final HttpStatus status;

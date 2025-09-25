@@ -35,8 +35,9 @@ public class UserProfileService {
     }
 
     @Transactional
-    public void updateNicknameById(UUID id, String newNickname) {
-        userRepository.updateNicknameById(id, newNickname);
+    public void updateNicknameById(UUID id, UserProfileNicknameUpdateDto dto) {
+        userService.findUserById(id).orElseThrow(() -> new UserException(ErrorCode.USER_LOAD_FAILED));
+        userRepository.updateNicknameById(id, dto.getNickname());
     }
 
     @Transactional
@@ -46,7 +47,7 @@ public class UserProfileService {
 
         if(newProfile == null || newProfile.isEmpty()) return;
 
-        List<UUID> imageUUID = imageService.uploadImages(id, "ppubucket", "oppu", imageService.toList(newProfile));
+        List<UUID> imageUUID = imageService.uploadImages(id, "ppubucket", "profile", imageService.toList(newProfile));
         List<UUID> oldImageUUID = imageService.toList(user.getProfileImage());
 
         imageService.deleteObjectsAfterCommit(oldImageUUID);

@@ -18,5 +18,5 @@ public class UserPerfumeWishId implements Serializable {
     private UUID userId;
 
     @Column(name="perfume_id", nullable = false)
-    private UUID perfumeId;
+    private Integer perfumeId;
 }

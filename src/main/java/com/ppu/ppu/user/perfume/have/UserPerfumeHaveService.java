@@ -14,7 +14,7 @@ public class UserPerfumeHaveService {
     private UserPerfumeHaveRepository userPerfumeHaveRepository;
 
     @Transactional
-    public void addPerfumeIdsByUserIdAndPerfumeIds(UUID userId, List<UUID> perfumeIds) {
+    public void addPerfumeIdsByUserIdAndPerfumeIds(UUID userId, List<Integer> perfumeIds) {
         List<UserPerfumeHave> have = perfumeIds
                 .stream()
                 .map(pid -> new UserPerfumeHave(new UserPerfumeHaveId(userId, pid)))
@@ -23,12 +23,12 @@ public class UserPerfumeHaveService {
         userPerfumeHaveRepository.saveAll(have);
     }
 
-    public Optional<List<UUID>> findPerfumeIdsByUserId(UUID userId) {
+    public Optional<List<Integer>> findPerfumeIdsByUserId(UUID userId) {
         return userPerfumeHaveRepository.findPerfumeIdsByUserId(userId);
     }
 
     @Transactional
-    public int deleteByUserIdAndPerfumeIdIn(UUID userId, List<UUID> perfumeIds) {
+    public int deleteByUserIdAndPerfumeIdIn(UUID userId, List<Integer> perfumeIds) {
         return userPerfumeHaveRepository.deleteByUserIdAndPerfumeIdIn(userId, perfumeIds);
     }
 }

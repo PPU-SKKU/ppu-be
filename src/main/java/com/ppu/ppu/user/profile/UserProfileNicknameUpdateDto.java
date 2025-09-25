@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserProfileUpdateDto {
-    private MultipartFile profileImage;
+public class UserProfileNicknameUpdateDto {
     private String nickname;
 }

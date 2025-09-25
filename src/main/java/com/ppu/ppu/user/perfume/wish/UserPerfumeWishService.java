@@ -14,7 +14,7 @@ public class UserPerfumeWishService {
     private UserPerfumeWishRepository userPerfumeWishRepository;
 
     @Transactional
-    public void addPerfumeIdsByUserIdAndPerfumeIds(UUID userId, List<UUID> perfumeIds) {
+    public void addPerfumeIdsByUserIdAndPerfumeIds(UUID userId, List<Integer> perfumeIds) {
         List<UserPerfumeWish> wish = perfumeIds
                 .stream()
                 .map(pid -> new UserPerfumeWish(new UserPerfumeWishId(userId, pid)))
@@ -23,12 +23,12 @@ public class UserPerfumeWishService {
         userPerfumeWishRepository.saveAll(wish);
     }
 
-    public Optional<List<UUID>> findPerfumeIdsByUserId(UUID userId) {
+    public Optional<List<Integer>> findPerfumeIdsByUserId(UUID userId) {
         return userPerfumeWishRepository.findPerfumeIdsByUserId(userId);
     }
 
     @Transactional
-    public int deleteByUserIdAndPerfumeIdIn(UUID userId, List<UUID> perfumeIds) {
+    public int deleteByUserIdAndPerfumeIdIn(UUID userId, List<Integer> perfumeIds) {
         return userPerfumeWishRepository.deleteByUserIdAndPerfumeIdIn(userId, perfumeIds);
     }
 }
