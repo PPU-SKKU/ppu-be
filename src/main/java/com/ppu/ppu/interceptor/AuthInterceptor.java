@@ -1,6 +1,6 @@
 package com.ppu.ppu.interceptor;
 
-import com.ppu.ppu.utils.JwtUtil;
+import com.ppu.ppu.utils.auth.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;

@@ -32,7 +32,7 @@ public class User {
     private String nickname;
 
     @Column(name = "profile_image", length = 255)
-    private String profileImage;
+    private UUID profileImage;
 
     @Email
     @Column(name = "email", length = 255, nullable = false)

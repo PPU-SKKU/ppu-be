@@ -11,5 +11,5 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class UserPerfumeDto {
-    private List<UUID> perfumeIds;
+    private List<Integer> perfumeIds;
 }

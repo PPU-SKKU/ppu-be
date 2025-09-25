@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface UserPerfumeHaveRepository extends JpaRepository<UserPerfumeHave, UserPerfumeHaveId> {
     @Query("SELECT u.id.perfumeId FROM UserPerfumeHave u WHERE u.id.userId = :userId")
-    Optional<List<UUID>> findPerfumeIdsByUserId(@Param("userId") UUID userId);
+    Optional<List<Integer>> findPerfumeIdsByUserId(@Param("userId") UUID userId);
 
     @Modifying
     @Query("DELETE FROM UserPerfumeHave u WHERE u.id.userId = :userId and u.id.perfumeId in :perfumeIds")
-    int deleteByUserIdAndPerfumeIdIn(@Param("userId") UUID userId, @Param("perfumeIds") List<UUID> perfumeIds);
+    int deleteByUserIdAndPerfumeIdIn(@Param("userId") UUID userId, @Param("perfumeIds") List<Integer> perfumeIds);
 }

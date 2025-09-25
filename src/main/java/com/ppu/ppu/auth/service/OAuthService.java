@@ -6,10 +6,10 @@ import com.ppu.ppu.exception.domain.AuthException;
 import com.ppu.ppu.user.Gender;
 import com.ppu.ppu.user.LoginType;
 import com.ppu.ppu.auth.dto.UserLoginResponseDto;
-import com.ppu.ppu.utils.kakao.KakaoAuthPurpose;
-import com.ppu.ppu.utils.kakao.KakaoUtil;
-import com.ppu.ppu.utils.kakao.dto.KakaoOauthInfo;
-import com.ppu.ppu.utils.kakao.dto.KakaoUserAuthorizeCodeDto;
+import com.ppu.ppu.utils.auth.kakao.KakaoAuthPurpose;
+import com.ppu.ppu.utils.auth.kakao.KakaoUtil;
+import com.ppu.ppu.utils.auth.kakao.dto.KakaoOauthInfo;
+import com.ppu.ppu.utils.auth.kakao.dto.KakaoUserAuthorizeCodeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

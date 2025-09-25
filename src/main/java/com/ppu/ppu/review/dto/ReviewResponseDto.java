@@ -5,6 +5,7 @@ import com.ppu.ppu.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -34,11 +35,11 @@ public class ReviewResponseDto {
         this.content = content;
     }
 
-    public static ReviewResponseDto fromEntity(Review review) {
+    public static ReviewResponseDto fromEntity(Review review, URL perfumeImageUrl) {
         ReviewResponseDto dto = new ReviewResponseDto();
         dto.setId(review.getId());
         dto.setUserId(UUID.fromString(String.valueOf(review.getUserId())));
-        dto.setPerfume(PerfumeResponseDto.fromEntity(review.getPerfume()));
+        dto.setPerfume(PerfumeResponseDto.fromEntity(review.getPerfume(), perfumeImageUrl));
         dto.setLiked(review.isLiked());
         dto.setScore(review.getScore());
         dto.setWearTested(review.isWearTested());

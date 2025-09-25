@@ -6,6 +6,8 @@ import com.ppu.ppu.perfume.domain.Perfume;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.net.URL;
+
 @Getter
 @Setter
 public class PerfumeResponseDto {
@@ -14,12 +16,12 @@ public class PerfumeResponseDto {
     String originalName;
     String brandKoreanName;
     String brandOriginalName;
-    String image;
+    URL image;
 
     public PerfumeResponseDto() {
     }
 
-    public PerfumeResponseDto(Integer id, String koreanName, String originalName, String brandKoreanName, String brandOriginalName, String image) {
+    public PerfumeResponseDto(Integer id, String koreanName, String originalName, String brandKoreanName, String brandOriginalName, URL image) {
         this.id = id;
         this.koreanName = koreanName;
         this.originalName = originalName;
@@ -28,7 +30,7 @@ public class PerfumeResponseDto {
         this.image = image;
     }
 
-    public static PerfumeResponseDto fromEntity(Perfume perfume) {
+    public static PerfumeResponseDto fromEntity(Perfume perfume, URL imageUrl) {
         PerfumeResponseDto dto = new PerfumeResponseDto();
         dto.setId(perfume.getId());
         dto.setKoreanName(perfume.getKoreanName());
@@ -40,7 +42,7 @@ public class PerfumeResponseDto {
             dto.setBrandOriginalName(brand.getOriginalName());
         }
 
-        dto.setImage(perfume.getImage());
+        dto.setImage(imageUrl);
 
         return dto;
     }

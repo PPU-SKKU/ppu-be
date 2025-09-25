@@ -1,6 +1,6 @@
-package com.ppu.ppu.utils.kakao;
+package com.ppu.ppu.utils.auth.kakao;
 
-import com.ppu.ppu.utils.kakao.dto.*;
+import com.ppu.ppu.utils.auth.kakao.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

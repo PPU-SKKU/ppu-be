@@ -1,6 +1,7 @@
 package com.ppu.ppu.perfume.domain;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +28,7 @@ public class Perfume {
     private String koreanName;
 
     @Column(name = "image")
-    private String image;
+    private UUID image;
 
     public Perfume() {
     }

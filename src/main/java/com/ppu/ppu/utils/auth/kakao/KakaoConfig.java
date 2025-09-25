@@ -1,4 +1,4 @@
-package com.ppu.ppu.utils.kakao;
+package com.ppu.ppu.utils.auth.kakao;
 
 import lombok.Getter;
 import org.springframework.context.annotation.Bean;
